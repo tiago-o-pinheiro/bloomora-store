@@ -17,7 +17,7 @@ const NotFound = () => {
       <div className="p-6 w-1/3 rounded-lg shadow-md text-center">
         <h1 className="text-3xl font-bold mb-4">404 - Not Found</h1>
         <p className="text-destructive">
-          Sorry, we couldn't find the page you're looking for.
+          Sorry, we couldn&#39;t find the page you&#39;re looking for.
         </p>
         <Button
           variant="outline"

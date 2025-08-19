@@ -1,9 +1,7 @@
-import { Button } from "@/components/ui/button";
 import { APP_NAME } from "@/lib/constants/constants";
-import { ShoppingCart, UserIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { ThemeSwitcher } from "../theme-switcher/ThemeSwitcher";
+import Menu from "../menu/Menu";
 
 const Header = () => {
   return (
@@ -23,19 +21,7 @@ const Header = () => {
             </span>
           </Link>
         </div>
-        <div className="space-x-2">
-          <ThemeSwitcher />
-          <Button asChild variant={"ghost"}>
-            <Link href="/cart" className="flex items-center">
-              <ShoppingCart /> Cart
-            </Link>
-          </Button>
-          <Button asChild>
-            <Link href="/cart" className="flex items-center">
-              <UserIcon /> Sign In
-            </Link>
-          </Button>
-        </div>
+        <Menu />
       </div>
     </header>
   );
