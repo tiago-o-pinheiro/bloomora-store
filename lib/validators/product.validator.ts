@@ -16,18 +16,18 @@ export const insertProductSchema = z.object({
     .string()
     .min(3, "Category must be at least 3 characters long")
     .max(100),
+  brand: z.string().min(3, "Brand must be at least 3 characters long").max(100),
   description: z
     .string()
     .min(10, "Description must be at least 10 characters long")
     .max(1000),
-  brand: z.string().min(3, "Brand must be at least 3 characters long").max(100),
   images: z
     .array(z.string())
     .min(1, "At least one image is required")
     .max(5, "A maximum of 5 images is allowed"),
+  isFeatured: z.boolean(),
   price: currency,
   numReviews: z.number().min(0),
   stock: z.coerce.number().min(0),
-  isFeatured: z.boolean(),
   banner: z.string().nullable(),
 });
