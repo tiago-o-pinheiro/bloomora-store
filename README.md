@@ -1,36 +1,82 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Art Store
+
+Art Store is a full-stack demo storefront built with Next.js and Prisma. It
+showcases modern e‑commerce features and serves as a portfolio project.
+
+## Features
+
+- ✨ Latest products fetched via Next.js Server Actions and Prisma
+- 🖼️ Product pages with image gallery, pricing, stock indicators and
+  add‑to‑cart placeholder
+- 🎨 Responsive UI styled with Tailwind CSS and Radix UI primitives
+- 🌗 Light/dark theme toggle powered by `next-themes`
+- ✅ Data validation with Zod
+- 🗃️ PostgreSQL database access through Prisma and the Neon serverless driver
+- 🧪 Ready-to-seed sample data for quick demos
+
+## Tech Stack
+
+- [Next.js 15](https://nextjs.org/) with the App Router
+- [React 19](https://react.dev/) & TypeScript
+- [Tailwind CSS](https://tailwindcss.com/)
+- [Prisma](https://www.prisma.io/) + [Neon](https://neon.tech/) (PostgreSQL)
+- [Zod](https://zod.dev/) for schema validation
+- [Radix UI](https://www.radix-ui.com/) & [Lucide Icons](https://lucide.dev/)
 
 ## Getting Started
 
-First, run the development server:
+### 1. Install dependencies
+
+```bash
+npm install
+# or
+pnpm install
+```
+
+### 2. Configure environment variables
+
+Create a `.env` file in the project root:
+
+```env
+DATABASE_URL="postgres://USER:PASSWORD@HOST:PORT/DB"
+NEXT_PUBLIC_APP_NAME="Art Store"
+NEXT_PUBLIC_APP_DESCRIPTION="A place to find and purchase art."
+NEXT_PUBLIC_SERVER_URL="http://localhost:3000"
+NEXT_PUBLIC_LATEST_PRODUCTS_LIMIT=10
+```
+
+### 3. Set up the database and seed sample data
+
+```bash
+npx prisma db push
+npx ts-node db/seed.ts
+```
+
+### 4. Run the development server
 
 ```bash
 npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000) to view the app.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Available Scripts
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- `npm run dev` – start the development server
+- `npm run build` – build for production
+- `npm start` – run the production build
+- `npm run lint` – run ESLint
 
-## Learn More
+## Project Structure
 
-To learn more about Next.js, take a look at the following resources:
+- `app/` – Next.js App Router pages and layouts
+- `components/` – UI components and widgets
+- `db/` – Prisma client setup and seed scripts
+- `lib/` – helpers, constants and server actions
+- `public/` – static assets and sample product images
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+---
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+This project is a work in progress and aims to demonstrate full-stack web
+development for a portfolio.
 
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
