@@ -22,7 +22,7 @@ const NotFound = () => {
         <Button
           variant="outline"
           className="mt-4"
-          onClick={() => window.history.back()}
+          onClick={() => (window.location.href = "/")}
         >
           Go Back Home
         </Button>
