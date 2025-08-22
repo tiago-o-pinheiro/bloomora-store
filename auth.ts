@@ -58,9 +58,13 @@ export const config: NextAuthConfig = {
   ],
   callbacks: {
     async session({ session, trigger, token }) {
-      session?.user?.id = token.sub;
+      if (session.user) {
+        session.user.id = token.sub ?? "";
+      }
       if (trigger === "update") {
-        session?.user?.name = token.name;
+        if (session.user) {
+          session.user.name = token.name;
+        }
       }
       return session;
     },

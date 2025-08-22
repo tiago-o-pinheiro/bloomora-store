@@ -21,7 +21,7 @@ const Menu = () => {
           </Link>
         </Button>
         <Button asChild>
-          <Link href="/cart" className="flex items-center">
+          <Link href="/sign-in" className="flex items-center">
             <UserIcon /> Sign In
           </Link>
         </Button>
@@ -41,7 +41,7 @@ const Menu = () => {
               </Link>
             </Button>
             <Button asChild>
-              <Link href="/cart" className="flex items-center">
+              <Link href="/sign-in" className="flex items-center">
                 <UserIcon /> Sign In
               </Link>
             </Button>

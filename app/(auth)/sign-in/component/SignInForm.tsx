@@ -1,30 +1,50 @@
 "use client";
 
+import { useActionState } from "react";
+import { useFormStatus } from "react-dom";
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import Link from "next/link";
-import { useState } from "react";
+import { signInWithCredentials } from "@/lib/actions/user/user.actions";
+import { useSearchParams } from "next/navigation";
 
-const SIGN_IN_DEFAULT_VALUES = {
-  email: "elver@example.com",
-  password: "password",
+const SignInButton = () => {
+  const { pending } = useFormStatus();
+  return (
+    <Button
+      type="submit"
+      className="w-full"
+      disabled={pending}
+      variant="default"
+    >
+      {pending ? "Signing In..." : "Sign In"}
+    </Button>
+  );
 };
 
 const SignInForm = () => {
-  const [formData, setFormData] = useState(SIGN_IN_DEFAULT_VALUES);
+  const [data, action] = useActionState(signInWithCredentials, {
+    success: false,
+    message: "",
+  });
+
+  const searchParams = useSearchParams();
+  const callbackUrl = searchParams.get("callbackUrl") || "/";
+
   return (
-    <div className="space-y-4">
+    <form className="space-y-4" action={action}>
+      <input type="hidden" name="callbackUrl" value={callbackUrl} />
       <div>
         <Label htmlFor="email">Email</Label>
         <Input
           type="email"
+          name="email"
           id="email"
           placeholder="Email"
           className="input"
           autoComplete="email"
-          value={formData.email}
-          onChange={(e) => setFormData({ ...formData, email: e.target.value })}
         />
       </div>
       <div>
@@ -32,26 +52,24 @@ const SignInForm = () => {
         <Input
           type="password"
           id="password"
+          name="password"
           placeholder="Password"
           className="input"
-          value={formData.password}
-          onChange={(e) =>
-            setFormData({ ...formData, password: e.target.value })
-          }
         />
       </div>
       <div className="w-full">
-        <Button type="submit" className="w-full">
-          Sign In
-        </Button>
+        <SignInButton />
       </div>
+      {data && !data.success && (
+        <div className="text-sm text-red-500">{data.message}</div>
+      )}
       <div className="text-sm text-center text-muted-foreground">
         Don&apos;t have an account?{" "}
         <Link href="/sign-up" target="_self" className="link">
           Sign Up
         </Link>
       </div>
-    </div>
+    </form>
   );
 };
 

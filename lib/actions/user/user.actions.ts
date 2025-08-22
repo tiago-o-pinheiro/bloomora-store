@@ -13,6 +13,7 @@ export const signInWithCredentials = async (
       email: formData.get("email"),
       password: formData.get("password"),
     });
+
     await signIn("credentials", {
       email: user.email,
       password: user.password,
