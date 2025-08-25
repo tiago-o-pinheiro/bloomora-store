@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import { MenuIcon, ShoppingCart, UserIcon } from "lucide-react";
+import { MenuIcon, ShoppingCart } from "lucide-react";
 import { ThemeSwitcher } from "../theme-switcher/ThemeSwitcher";
 import Link from "next/link";
 import {
@@ -9,6 +9,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import UserButton from "../user-button/UserButton";
 
 const Menu = () => {
   return (
@@ -20,11 +21,7 @@ const Menu = () => {
             <ShoppingCart /> Cart
           </Link>
         </Button>
-        <Button asChild>
-          <Link href="/sign-in" className="flex items-center">
-            <UserIcon /> Sign In
-          </Link>
-        </Button>
+        <UserButton />
       </nav>
       <nav className="md:hidden">
         <Sheet>
@@ -40,11 +37,7 @@ const Menu = () => {
                 <ShoppingCart /> Cart
               </Link>
             </Button>
-            <Button asChild>
-              <Link href="/sign-in" className="flex items-center">
-                <UserIcon /> Sign In
-              </Link>
-            </Button>
+            <UserButton />
           </SheetContent>
         </Sheet>
       </nav>

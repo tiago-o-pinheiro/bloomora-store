@@ -8,6 +8,7 @@ import { CredentialsValidator } from "@/lib/validators/credentials.valitador";
 import type { NextAuthConfig } from "next-auth";
 
 const MAX_TOKEN_LIFE = process.env.MAX_TOKEN_LIFE;
+console.log(MAX_TOKEN_LIFE);
 
 export const config: NextAuthConfig = {
   pages: {
@@ -17,7 +18,7 @@ export const config: NextAuthConfig = {
   },
   session: {
     strategy: "jwt",
-    maxAge: MAX_TOKEN_LIFE ? parseInt(MAX_TOKEN_LIFE) : 30 * 24 * 60 * 60,
+    maxAge: Number(MAX_TOKEN_LIFE) || 30 * 24 * 60 * 60,
   },
   adapter: PrismaAdapter(prisma),
   providers: [
@@ -60,13 +61,31 @@ export const config: NextAuthConfig = {
     async session({ session, trigger, token }) {
       if (session.user) {
         session.user.id = token.sub ?? "";
+        session.user.role = token.role;
+        session.user.name = token.name;
       }
+
       if (trigger === "update") {
         if (session.user) {
           session.user.name = token.name;
         }
       }
       return session;
+    },
+
+    async jwt({ token, user }) {
+      if (user) {
+        token.role = user.role;
+        if (user.name === "NO_NAME") {
+          token.name = user.email?.split("@")[0] || "User";
+
+          await prisma.user.update({
+            where: { id: user.id },
+            data: { name: token.name },
+          });
+        }
+      }
+      return token;
     },
   },
 };

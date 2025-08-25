@@ -9,17 +9,18 @@ import { APP_NAME } from "@/lib/constants/constants";
 import { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
-import SignInForm from "./component/SignInForm";
+
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
+import SignUpForm from "./components/SignUpForm";
 import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
 
 export const metadata: Metadata = {
-  title: "Sign In",
-  description: "Sign in to your account",
+  title: "Sign Up",
+  description: "Create a new account",
 };
 
-const SignInPage = async (props: {
+const SignUpPage = async (props: {
   searchParams: Promise<{ callbackUrl: string }>;
 }) => {
   const { callbackUrl } = await props.searchParams;
@@ -43,16 +44,16 @@ const SignInPage = async (props: {
             />
           </Link>
         </CardHeader>
-        <CardTitle className="text-center">Sign In</CardTitle>
+        <CardTitle className="text-center">Sign Up</CardTitle>
         <CardDescription className="text-center py-2">
-          Sign in to your account to continue using {APP_NAME}.
+          Enter your details to create a new account on {APP_NAME}.
         </CardDescription>
         <CardContent className="space-y-4">
-          <SignInForm />
+          <SignUpForm />
         </CardContent>
       </Card>
     </AnimatedContainer>
   );
 };
 
-export default SignInPage;
+export default SignUpPage;
