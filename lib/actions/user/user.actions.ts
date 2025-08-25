@@ -77,7 +77,6 @@ export const signUpUser = async (prevState: unknown, formData: FormData) => {
       message: "User registration successful",
     };
   } catch (error) {
-    console.log(error);
     if (isRedirectError(error)) {
       throw error;
     }

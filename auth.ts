@@ -8,7 +8,6 @@ import { CredentialsValidator } from "@/lib/validators/credentials.valitador";
 import type { NextAuthConfig } from "next-auth";
 
 const MAX_TOKEN_LIFE = process.env.MAX_TOKEN_LIFE;
-console.log(MAX_TOKEN_LIFE);
 
 export const config: NextAuthConfig = {
   pages: {

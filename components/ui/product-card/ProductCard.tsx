@@ -5,6 +5,10 @@ import Image from "next/image";
 import Price from "../price/Price";
 
 const ProductCard = ({ product }: { product: Product }) => {
+  if (!product) {
+    return null;
+  }
+
   return (
     <Card className="w-full max-w-sm">
       <CardHeader className="p-0 items-center">
