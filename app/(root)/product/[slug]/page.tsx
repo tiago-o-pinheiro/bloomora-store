@@ -1,9 +1,10 @@
 import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ImageGallery from "@/components/ui/gallery/Galery";
 import Price from "@/components/ui/price/Price";
+import AddToCartButton from "@/components/widgets/add-to-cart-button/AddToCart";
 import { getProductBySlug } from "@/lib/actions/product/product.actions";
+
 import { notFound } from "next/navigation";
 
 const ProductDetailsPage = async (props: {
@@ -68,7 +69,16 @@ const ProductDetailsPage = async (props: {
                 <div className="mt-4">
                   {product.stock > 0 && (
                     <div className="flex justify-center">
-                      <Button className="w-full">Add to Cart</Button>
+                      <AddToCartButton
+                        item={{
+                          id: product.id,
+                          name: product.name,
+                          slug: product.slug,
+                          price: product.price,
+                          image: product.images[0],
+                          quantity: 1,
+                        }}
+                      />
                     </div>
                   )}
                 </div>
