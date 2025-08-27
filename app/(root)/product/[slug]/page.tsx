@@ -4,6 +4,7 @@ import ImageGallery from "@/components/ui/gallery/Galery";
 import Price from "@/components/ui/price/Price";
 import AddToCartButton from "@/components/widgets/add-to-cart-button/AddToCart";
 import { getProductBySlug } from "@/lib/actions/product/product.actions";
+import { getCartItems } from "@/lib/actions/cart/cart.actions";
 
 import { notFound } from "next/navigation";
 
@@ -17,6 +18,8 @@ const ProductDetailsPage = async (props: {
   if (!product) {
     return notFound();
   }
+
+  const cart = await getCartItems();
 
   return (
     <>
@@ -70,12 +73,14 @@ const ProductDetailsPage = async (props: {
                   {product.stock > 0 && (
                     <div className="flex justify-center">
                       <AddToCartButton
+                        cart={cart}
                         item={{
                           id: product.id,
                           name: product.name,
                           slug: product.slug,
                           price: product.price,
                           image: product.images[0],
+                          stock: product.stock ?? 0,
                           quantity: 1,
                         }}
                       />

@@ -2,6 +2,7 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/db/prisma";
+import { Cart } from "@/lib/types/cart.types";
 import { Item } from "@/lib/types/item.types";
 import {
   convertToPlainObject,
@@ -38,14 +39,19 @@ const calcPrice = (items: Item[]) => {
   };
 };
 
+const getSessionCartId = async () => {
+  const sessionCartId = (await cookies()).get("sessionCartId");
+  return sessionCartId?.value;
+};
+
 export const addItemToCart = async (data: Item) => {
   try {
-    const sessionCartId = (await cookies()).get("sessionCartId")?.value;
+    const sessionCartId = await getSessionCartId();
     if (!sessionCartId) throw new Error("Cart session ID not found");
     const session = await auth();
     const userId = session?.user.id ? session.user.id : null;
 
-    const cart = await getCartItems();
+    const cart = (await getCartItems()) as Cart | null;
     const item = cartItemValidator.parse(data);
 
     const product = await prisma.product.findUnique({
@@ -78,8 +84,8 @@ export const addItemToCart = async (data: Item) => {
       };
     }
 
-    const carItems = cart.items as Item[];
-    const findItem = carItems.find((i) => i.id === item.id);
+    const cartItems = cart.items as Item[];
+    const findItem = cartItems.find((i) => i.id === item.id);
 
     if (findItem) {
       if (product.stock < findItem.quantity + item.quantity) {
@@ -88,17 +94,17 @@ export const addItemToCart = async (data: Item) => {
           message: "Not enough stock available",
         };
       }
-      carItems.find((i) => i.id === item.id)!.quantity += findItem.quantity + 1;
+      cartItems.find((i) => i.id === item.id)!.quantity = findItem.quantity + 1;
     } else {
       if (product.stock < 1) throw new Error("Not enough stock available");
-      carItems.push(item);
+      cartItems.push(item);
     }
 
     await prisma.cart.update({
-      where: { id: cart.id },
+      where: { id: cart?.id },
       data: {
-        items: carItems,
-        ...calcPrice(carItems),
+        items: cartItems,
+        ...calcPrice(cartItems),
       },
     });
 
@@ -118,7 +124,7 @@ export const addItemToCart = async (data: Item) => {
   }
 };
 
-export const getCartItems = async () => {
+export const getCartItems = async (): Promise<Cart | null> => {
   try {
     const sessionCartId = (await cookies()).get("sessionCartId")?.value;
     if (!sessionCartId) throw new Error("Cart session ID not found");
@@ -135,13 +141,64 @@ export const getCartItems = async () => {
 
     return convertToPlainObject({
       ...cart,
-      items: cart.items ?? [],
+      items: (cart.items ?? []) as Item[],
       itemsPrice: cart.itemsPrice.toString(),
       totalPrice: cart.totalPrice.toString(),
       shippingPrice: cart.shippingPrice.toString(),
       taxPrice: cart.taxPrice.toString(),
     });
   } catch (error) {
+    console.log(error);
     return null;
+  }
+};
+
+export const removeItemFromCart = async (productId: string) => {
+  try {
+    const sessionCartId = await getSessionCartId();
+    if (!sessionCartId) throw new Error("Cart session ID not found");
+
+    const product = await prisma.product.findFirst({
+      where: { id: productId },
+    });
+
+    if (!product) throw new Error("Product not found");
+
+    const cart = (await getCartItems()) as Cart | null;
+    if (!cart) {
+      throw new Error("Cart not found");
+    }
+
+    const exist = cart.items.find((item) => item.id === productId);
+    if (!exist) {
+      throw new Error("Item not found in cart");
+    }
+    if (exist.quantity === 1) {
+      cart.items = cart.items.filter((item) => item.id !== productId);
+    } else {
+      cart.items = cart.items.map((item) =>
+        item.id === productId ? { ...item, quantity: item.quantity - 1 } : item
+      );
+    }
+
+    await prisma.cart.update({
+      where: { id: cart?.id },
+      data: {
+        items: cart.items,
+        ...calcPrice(cart.items),
+      },
+    });
+
+    revalidatePath(`/product/${product.slug}`);
+
+    return {
+      success: true,
+      message: `${product.name} removed from cart`,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
   }
 };
