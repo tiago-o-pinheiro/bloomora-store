@@ -4,8 +4,9 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/db/prisma";
 import { compareSync } from "bcrypt-ts-edge";
 import { CredentialsValidator } from "@/lib/validators/credentials.valitador";
-
+import { cookies } from "next/headers";
 import type { NextAuthConfig } from "next-auth";
+import { NextResponse } from "next/server";
 
 const MAX_TOKEN_LIFE = process.env.MAX_TOKEN_LIFE;
 
@@ -85,6 +86,28 @@ export const config: NextAuthConfig = {
         }
       }
       return token;
+    },
+    async authorized({ request }) {
+      if (!request.cookies.get("sessionCartId")) {
+        const sessionCartId = crypto.randomUUID();
+        const newRequestHeaders = new Headers(request.headers);
+
+        const response = NextResponse.next({
+          request: {
+            headers: newRequestHeaders,
+          },
+        });
+
+        response.cookies.set({
+          name: "sessionCartId",
+          value: sessionCartId,
+          httpOnly: true,
+        });
+
+        return response;
+      } else {
+        return true;
+      }
     },
   },
 };

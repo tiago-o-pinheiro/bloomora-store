@@ -1,8 +1,7 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { ToastAction } from "@/components/ui/toast";
-import { useToast } from "@/hooks/use-toast";
+
 import { addItemToCart } from "@/lib/actions/cart/cart.actions";
 import { Item } from "@/lib/types/item.types";
 import { Plus } from "lucide-react";
@@ -21,15 +20,13 @@ const AddToCartButton = ({ item }: { item: Item }) => {
       return;
     }
 
-    toast.success(`${item.name} added to cart successfully`, {
+    toast.success(response.message, {
       action: (
-        <ToastAction
-          className="bg-primary text-white hover:bg-gray-800"
-          altText="Go to cart"
-          onClick={() => router.push("/cart")}
-        >
-          Go to cart
-        </ToastAction>
+        <div onClick={() => router.push("/cart")}>
+          <Button variant="secondary" size="sm">
+            Go to cart
+          </Button>
+        </div>
       ),
     });
   };

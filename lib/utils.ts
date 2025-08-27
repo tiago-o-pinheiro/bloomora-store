@@ -44,3 +44,8 @@ export const parseZodErrors = (err: z.ZodError) => {
   const { fieldErrors, formErrors } = z.flattenError(err);
   return { fieldErrors, formErrors };
 };
+
+//round two decimal places
+export const roundTwoDecimalPlaces = (num: number): number => {
+  return Math.round((num + Number.EPSILON) * 100) / 100;
+};
