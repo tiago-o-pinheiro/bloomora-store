@@ -4,12 +4,13 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/db/prisma";
 import { compareSync } from "bcrypt-ts-edge";
 import { CredentialsValidator } from "@/lib/validators/credentials.valitador";
-
 import type { NextAuthConfig } from "next-auth";
+import { edgeAuthConfig } from "./auth-edge";
 
 const MAX_TOKEN_LIFE = process.env.MAX_TOKEN_LIFE;
 
 export const config: NextAuthConfig = {
+  ...edgeAuthConfig,
   pages: {
     signIn: "/signin",
     signOut: "/signout",

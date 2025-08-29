@@ -12,4 +12,5 @@ model User {
   updatedAt     DateTime  @updatedAt @db.Timestamp(6)
   account       Account[]
   session       Session[]
+  cart          Cart[]
 }

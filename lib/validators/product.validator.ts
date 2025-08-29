@@ -1,7 +1,7 @@
 import { z } from "zod";
 import { formatNumber } from "../utils";
 
-const currency = z
+export const currency = z
   .string()
   .refine((val) => /^\d+(\.\d{2})?$/.test(formatNumber(Number(val))), {
     message: "Invalid price format",
