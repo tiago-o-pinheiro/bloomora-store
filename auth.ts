@@ -4,7 +4,6 @@ import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/db/prisma";
 import { compareSync } from "bcrypt-ts-edge";
 import { CredentialsValidator } from "@/lib/validators/credentials.valitador";
-import { cookies } from "next/headers";
 import type { NextAuthConfig } from "next-auth";
 import { NextResponse } from "next/server";
 
