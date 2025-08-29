@@ -39,14 +39,19 @@ const calcPrice = (items: Item[]) => {
   };
 };
 
-const getSessionCartId = async () => {
-  const sessionCartId = (await cookies()).get("sessionCartId");
-  return sessionCartId?.value;
+const getSessionCartId = () => {
+  const cookieStore = cookies();
+  let id = cookieStore.get("sessionCartId")?.value;
+  if (!id) {
+    id = crypto.randomUUID();
+    cookieStore.set({ name: "sessionCartId", value: id, httpOnly: true });
+  }
+  return id;
 };
 
 export const addItemToCart = async (data: Item) => {
   try {
-    const sessionCartId = await getSessionCartId();
+    const sessionCartId = getSessionCartId();
     if (!sessionCartId) throw new Error("Cart session ID not found");
     const session = await auth();
     const userId = session?.user.id ? session.user.id : null;
@@ -126,7 +131,7 @@ export const addItemToCart = async (data: Item) => {
 
 export const getCartItems = async (): Promise<Cart | null> => {
   try {
-    const sessionCartId = (await cookies()).get("sessionCartId")?.value;
+    const sessionCartId = getSessionCartId();
     if (!sessionCartId) throw new Error("Cart session ID not found");
 
     const session = await auth();
@@ -155,7 +160,7 @@ export const getCartItems = async (): Promise<Cart | null> => {
 
 export const removeItemFromCart = async (productId: string) => {
   try {
-    const sessionCartId = await getSessionCartId();
+    const sessionCartId = getSessionCartId();
     if (!sessionCartId) throw new Error("Cart session ID not found");
 
     const product = await prisma.product.findFirst({
