@@ -2,51 +2,20 @@
 
 import { Button } from "@/components/ui/button";
 
-import {
-  addItemToCart,
-  removeItemFromCart,
-} from "@/lib/actions/cart/cart.actions";
 import { Cart } from "@/lib/types/cart.types";
 import { Item } from "@/lib/types/item.types";
-import { Minus, Plus } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { toast } from "sonner";
+import { Loader, Minus, Plus } from "lucide-react";
+import { useAddToCart } from "./hooks/use-add-to-cart";
 
-const AddToCartButton = ({ item, cart }: { item: Item; cart: Cart | null }) => {
-  const router = useRouter();
+export type AddToCartProps = {
+  item: Item;
+  cart: Cart | null;
+};
+
+const AddToCartButton = ({ item, cart }: AddToCartProps) => {
   const existingInCart = cart?.items.find((i) => i.id === item.id);
-
-  const handleAddToCart = async () => {
-    const response = await addItemToCart(item);
-    if (!response.success) {
-      toast.error("Error", {
-        description: response.message,
-      });
-      return;
-    }
-
-    toast.success(response.message, {
-      action: (
-        <div onClick={() => router.push("/cart")}>
-          <Button variant="secondary" size="sm">
-            Go to cart
-          </Button>
-        </div>
-      ),
-    });
-  };
-
-  const handleRemoveFromCart = async () => {
-    const response = await removeItemFromCart(item.id);
-    if (!response.success) {
-      toast.error("Error", {
-        description: response.message,
-      });
-      return;
-    }
-
-    toast.success(response.message);
-  };
+  const { isPending, buttonClicked, handleAddToCart, handleRemoveFromCart } =
+    useAddToCart(item);
 
   return existingInCart ? (
     <div className="flex flex-col gap-2 w-full">
@@ -56,8 +25,13 @@ const AddToCartButton = ({ item, cart }: { item: Item; cart: Cart | null }) => {
           type="button"
           variant="outline"
           onClick={handleRemoveFromCart}
+          disabled={isPending}
         >
-          <Minus />
+          {isPending && buttonClicked === "remove" ? (
+            <Loader className="animate-spin" />
+          ) : (
+            <Minus />
+          )}
         </Button>
         {existingInCart.quantity}
         <Button
@@ -65,9 +39,13 @@ const AddToCartButton = ({ item, cart }: { item: Item; cart: Cart | null }) => {
           type="button"
           variant="outline"
           onClick={handleAddToCart}
-          disabled={existingInCart.quantity === item.stock}
+          disabled={existingInCart.quantity === item.stock || isPending}
         >
-          <Plus />
+          {isPending && buttonClicked === "add" ? (
+            <Loader className="animate-spin" />
+          ) : (
+            <Plus />
+          )}
         </Button>
       </div>
       {existingInCart.quantity === item.stock && (
@@ -76,7 +54,7 @@ const AddToCartButton = ({ item, cart }: { item: Item; cart: Cart | null }) => {
     </div>
   ) : (
     <Button className="w-full" type="button" onClick={handleAddToCart}>
-      <Plus />
+      {isPending ? <Loader className="animate-spin" /> : <Plus />}
       Add to Cart
     </Button>
   );
