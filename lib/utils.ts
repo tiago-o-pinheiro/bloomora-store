@@ -49,3 +49,13 @@ export const parseZodErrors = (err: z.ZodError) => {
 export const roundTwoDecimalPlaces = (num: number): number => {
   return Math.round((num + Number.EPSILON) * 100) / 100;
 };
+
+export const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
+  style: "currency",
+  currency: "USD",
+  minimumFractionDigits: 2,
+});
+
+export const formatCurrency = (amount: number | string): string => {
+  return CURRENCY_FORMATTER.format(Number(amount)) ?? "";
+};
