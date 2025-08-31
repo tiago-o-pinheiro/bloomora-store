@@ -2,6 +2,11 @@
 
 import { auth } from "@/auth";
 import { prisma } from "@/db/prisma";
+import {
+  CART_OUT_OF_STOCK,
+  GENERIC_ERROR,
+  PRODUCT_NOT_FOUND,
+} from "@/lib/constants/error-codes.constants";
 import { Cart } from "@/lib/types/cart.types";
 import { Item } from "@/lib/types/item.types";
 import {
@@ -39,19 +44,14 @@ const calcPrice = (items: Item[]) => {
   };
 };
 
-const getSessionCartId = async () => {
+export const getSessionCartId = async () => {
   const cookieStore = await cookies();
-  let id = cookieStore.get("sessionCartId")?.value;
-  if (!id) {
-    id = crypto.randomUUID();
-    cookieStore.set({ name: "sessionCartId", value: id, httpOnly: true });
-  }
-  return id;
+  return cookieStore.get("sessionCartId")?.value;
 };
 
 export const addItemToCart = async (data: Item) => {
   try {
-    const sessionCartId = getSessionCartId();
+    const sessionCartId = await getSessionCartId();
     if (!sessionCartId) throw new Error("Cart session ID not found");
     const session = await auth();
     const userId = session?.user.id ? session.user.id : null;
@@ -66,7 +66,7 @@ export const addItemToCart = async (data: Item) => {
     if (!product) {
       return {
         success: false,
-        message: "Product not found",
+        message: `${PRODUCT_NOT_FOUND} - Product not found`,
       };
     }
 
@@ -96,12 +96,13 @@ export const addItemToCart = async (data: Item) => {
       if (product.stock < findItem.quantity + item.quantity) {
         return {
           success: false,
-          message: "Not enough stock available",
+          message: `${CART_OUT_OF_STOCK} - Not enough stock available`,
         };
       }
       cartItems.find((i) => i.id === item.id)!.quantity = findItem.quantity + 1;
     } else {
-      if (product.stock < 1) throw new Error("Not enough stock available");
+      if (product.stock < 1)
+        throw new Error(`${CART_OUT_OF_STOCK} - Not enough stock available`);
       cartItems.push(item);
     }
 
@@ -124,7 +125,7 @@ export const addItemToCart = async (data: Item) => {
     console.log(error);
     return {
       success: false,
-      message: formatError(error),
+      message: `${GENERIC_ERROR} - ${formatError(error)}`,
     };
   }
 };
@@ -203,7 +204,7 @@ export const removeItemFromCart = async (productId: string) => {
   } catch (error) {
     return {
       success: false,
-      message: formatError(error),
+      message: `${GENERIC_ERROR} - ${formatError(error)}`,
     };
   }
 };

@@ -1,16 +1,16 @@
 model User {
-  id            String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  name          String    @default("NO_NAME")
-  email         String    @unique(map: "user_email_idx")
-  emailVerified DateTime? @db.Timestamp(6)
-  image         String?
-  password      String?
-  role          String    @default("USER")
-  address       Json?
-  paymentMethod String?
-  createdAt     DateTime  @default(now()) @db.Timestamp(6)
-  updatedAt     DateTime  @updatedAt @db.Timestamp(6)
-  account       Account[]
-  session       Session[]
-  cart          Cart[]
+  id              String            @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  name            String            @default("NO_NAME")
+  email           String            @unique(map: "user_email_idx")
+  emailVerified   DateTime?         @db.Timestamp(6)
+  image           String?
+  password        String?
+  role            String            @default("USER")
+  paymentMethod   String?
+  createdAt       DateTime          @default(now()) @db.Timestamp(6)
+  updatedAt       DateTime          @updatedAt @db.Timestamp(6)
+  account         Account[]
+  session         Session[]
+  cart            Cart[]
+  shippingAddress ShippingAddress[]
 }
