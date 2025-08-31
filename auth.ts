@@ -6,6 +6,7 @@ import { compareSync } from "bcrypt-ts-edge";
 import { CredentialsValidator } from "@/lib/validators/credentials.valitador";
 import type { NextAuthConfig } from "next-auth";
 import { edgeAuthConfig } from "./auth-edge";
+import { getSessionCartId } from "./lib/actions/cart/cart.actions";
 
 const MAX_TOKEN_LIFE = process.env.MAX_TOKEN_LIFE;
 
@@ -60,21 +61,21 @@ export const config: NextAuthConfig = {
   callbacks: {
     async session({ session, trigger, token }) {
       if (session.user) {
-        session.user.id = token.sub ?? "";
+        session.user.id = token.id as string;
         session.user.role = token.role;
-        session.user.name = token.name;
+        session.user.name = token.name ?? session.user.name;
       }
 
-      if (trigger === "update") {
-        if (session.user) {
-          session.user.name = token.name;
-        }
+      if (trigger === "update" && session.user) {
+        session.user.name = token.name ?? session.user.name;
       }
+
       return session;
     },
 
-    async jwt({ token, user }) {
+    async jwt({ token, user, trigger }) {
       if (user) {
+        token.id = user.id;
         token.role = user.role;
         if (user.name === "NO_NAME") {
           token.name = user.email?.split("@")[0] || "User";
@@ -84,7 +85,29 @@ export const config: NextAuthConfig = {
             data: { name: token.name },
           });
         }
+
+        if (trigger === "signIn" || trigger === "signUp") {
+          const sessionCartId = await getSessionCartId();
+
+          if (sessionCartId) {
+            const sessionCart = await prisma.cart.findFirst({
+              where: { sessionCartId: sessionCartId },
+            });
+
+            if (sessionCart) {
+              await prisma.cart.deleteMany({
+                where: { userId: user.id },
+              });
+
+              await prisma.cart.update({
+                where: { id: sessionCart.id },
+                data: { userId: user.id },
+              });
+            }
+          }
+        }
       }
+
       return token;
     },
   },

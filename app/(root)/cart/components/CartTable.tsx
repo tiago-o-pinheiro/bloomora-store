@@ -52,7 +52,7 @@ const CartTable = ({ cart }: { cart?: Cart | null }) => {
 
   const handleCheckout = () => {
     startTransition(() => {
-      router.push("/checkout");
+      router.push("/shipping-address");
     });
   };
 

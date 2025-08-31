@@ -17,8 +17,6 @@ const AddToCartButton = ({ item, cart }: AddToCartProps) => {
   const existingInCart = cart?.items.find((i) => i.id === item.id);
   const { isPending, handleAddToCart } = useAddRemoveItem(item);
 
-  console.log(existingInCart, item);
-
   return existingInCart ? (
     <div className="flex flex-col gap-2 w-full">
       <QuantityPicker item={existingInCart} />

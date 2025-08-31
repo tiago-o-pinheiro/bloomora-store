@@ -44,19 +44,14 @@ const calcPrice = (items: Item[]) => {
   };
 };
 
-const getSessionCartId = async () => {
+export const getSessionCartId = async () => {
   const cookieStore = await cookies();
-  let id = cookieStore.get("sessionCartId")?.value;
-  if (!id) {
-    id = crypto.randomUUID();
-    cookieStore.set({ name: "sessionCartId", value: id, httpOnly: true });
-  }
-  return id;
+  return cookieStore.get("sessionCartId")?.value;
 };
 
 export const addItemToCart = async (data: Item) => {
   try {
-    const sessionCartId = getSessionCartId();
+    const sessionCartId = await getSessionCartId();
     if (!sessionCartId) throw new Error("Cart session ID not found");
     const session = await auth();
     const userId = session?.user.id ? session.user.id : null;

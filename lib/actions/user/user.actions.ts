@@ -77,9 +77,33 @@ export const signUpUser = async (prevState: unknown, formData: FormData) => {
       message: "User registration successful",
     };
   } catch (error) {
+    console.log(error);
     if (isRedirectError(error)) {
       throw error;
     }
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const getUserById = async (id: string) => {
+  try {
+    const user = await prisma.user.findFirst({
+      where: { id },
+    });
+    if (!user) {
+      return {
+        success: false,
+        message: "User not found",
+      };
+    }
+    return {
+      success: true,
+      data: user,
+    };
+  } catch (error) {
     return {
       success: false,
       message: formatError(error),

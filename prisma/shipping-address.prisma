@@ -1,0 +1,15 @@
+model ShippingAddress {
+  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId       String?  @db.Uuid
+  fullName     String
+  addressLine1 String
+  addressLine2 String?
+  city         String
+  state        String
+  postalCode   String
+  country      String
+  createdAt    DateTime @default(now()) @db.Timestamp(6)
+  lat          Float?
+  lng          Float?
+  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+}
