@@ -6,23 +6,17 @@ export const metadata = {
   title: "Order Details",
 };
 
-type PageProps = {
-  params: {
-    id: string;
-  };
-};
-
-export default async function OrderDetailsPage({ params }: PageProps) {
-  const { id } = params;
+const OrderDetailsPage = async (props: { params: Promise<{ id: string }> }) => {
+  const { id } = await props.params;
   const { data: order } = await getOrderById(id);
 
-  if (!order) {
-    notFound();
-  }
+  if (!order) notFound();
 
   return (
     <div>
       <OrderDetailsTable order={order} />
     </div>
   );
-}
+};
+
+export default OrderDetailsPage;
