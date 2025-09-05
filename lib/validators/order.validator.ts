@@ -21,6 +21,6 @@ export const insertOrderItemSchema = z.object({
   image: z.url(),
   name: z.string().min(1, "Product name is required"),
   price: currency,
-  total: currency,
+  total: currency.optional(),
   slug: z.string().min(1).max(100),
 });

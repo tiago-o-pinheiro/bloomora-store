@@ -52,10 +52,14 @@ export const roundTwoDecimalPlaces = (num: number): number => {
 
 export const CURRENCY_FORMATTER = new Intl.NumberFormat("en-US", {
   style: "currency",
-  currency: "USD",
+  currency: "EUR",
   minimumFractionDigits: 2,
 });
 
 export const formatCurrency = (amount: number | string): string => {
   return CURRENCY_FORMATTER.format(Number(amount)) ?? "";
+};
+
+export const formatId = (id: string): string => {
+  return `..${id.substring(id.length - 6)}`;
 };

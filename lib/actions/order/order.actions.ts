@@ -7,6 +7,7 @@ import { getCartItems } from "../cart/cart.actions";
 import { getShippingAddressByUserId } from "../shipping-address/shipping-address.action";
 import { insertOrderSchema } from "@/lib/validators/order.validator";
 import { prisma } from "@/db/prisma";
+import { convertToPlainObject, formatError } from "@/lib/utils";
 
 export const createOrder = async () => {
   try {
@@ -113,6 +114,34 @@ export const createOrder = async () => {
     return {
       success: false,
       message: "Failed to create order",
+    };
+  }
+};
+
+export const getOrderById = async (id: string) => {
+  try {
+    const order = await prisma.order.findFirst({
+      where: { id },
+      include: {
+        orderItems: true,
+        user: { select: { email: true, name: true } },
+      },
+    });
+
+    if (!order) {
+      return {
+        success: false,
+        message: "Order not found",
+      };
+    }
+    return {
+      success: true,
+      data: convertToPlainObject(order),
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
     };
   }
 };
