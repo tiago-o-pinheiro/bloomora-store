@@ -13,4 +13,5 @@ model User {
   session         Session[]
   cart            Cart[]
   shippingAddress ShippingAddress[]
+  orders          Order[]
 }

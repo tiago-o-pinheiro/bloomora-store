@@ -1,6 +1,6 @@
 import z from "zod";
 
-export const shippingAddressValidator = z.object({
+export const shippingAddressSchema = z.object({
   fullName: z
     .string()
     .min(3, "Name must be at least 3 characters long")
@@ -24,6 +24,4 @@ export const shippingAddressValidator = z.object({
     .string()
     .min(2, "Country must be at least 2 characters long")
     .max(100),
-  lat: z.number().min(-90).max(90).optional(),
-  lng: z.number().min(-180).max(180).optional(),
 });

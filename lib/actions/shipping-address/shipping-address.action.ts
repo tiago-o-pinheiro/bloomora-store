@@ -1,7 +1,6 @@
 "use server";
 import { prisma } from "@/db/prisma";
-import { ShippingAddress } from "@/lib/types/shipping-address.type";
-import { shippingAddressValidator } from "@/lib/validators/shipping-address.validator";
+import { shippingAddressSchema } from "@/lib/validators/shipping-address.validator";
 
 export const getShippingAddressByUserId = async (userId: string) => {
   try {
@@ -25,7 +24,7 @@ export const getShippingAddressByUserId = async (userId: string) => {
 
 export const saveShippingAddress = async (userId: string, address: unknown) => {
   const existingAddress = await getShippingAddressByUserId(userId);
-  const shippingAddress = shippingAddressValidator.parse(address);
+  const shippingAddress = shippingAddressSchema.parse(address);
   console.log(shippingAddress);
 
   if (!shippingAddress) {

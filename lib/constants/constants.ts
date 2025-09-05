@@ -6,3 +6,11 @@ export const APP_DESCRIPTION =
   "A place to find and purchase art.";
 export const SERVER_URL =
   process.env.NEXT_PUBLIC_SERVER_URL || "http://localhost:3000";
+
+export const PAYMENT_METHODS = process.env.PAYMENT_METHODS?.split(",") || [
+  "PayPal",
+  "Stripe",
+  "Credit Card",
+];
+export const DEFAULT_PAYMENT_METHOD =
+  process.env.DEFAULT_PAYMENT_METHOD || "Credit Card";
