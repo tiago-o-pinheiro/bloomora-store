@@ -1,19 +1,19 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { shippingAddressValidator } from "@/lib/validators/shipping-address.validator";
+import { shippingAddressSchema } from "@/lib/validators/shipping-address.validator";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm, SubmitHandler } from "react-hook-form";
 import { Form } from "@/components/ui/form";
 import z from "zod";
 import FormInput from "@/components/ui/form-input/FormInput";
-import { useEffect, useTransition } from "react";
+import { useTransition } from "react";
 import { ArrowRight, Loader } from "lucide-react";
 import { saveShippingAddress } from "@/lib/actions/shipping-address/shipping-address.action";
 import { toast } from "sonner";
 import { useRouter } from "next/navigation";
 
-type ShippingFormType = z.infer<typeof shippingAddressValidator>;
+type ShippingFormType = z.infer<typeof shippingAddressSchema>;
 
 const DEFAULT_ADDRESS = {
   fullName: "",
@@ -35,7 +35,7 @@ const ShippingForm = ({
   const [isPending, startTransition] = useTransition();
   const router = useRouter();
   const form = useForm<ShippingFormType>({
-    resolver: zodResolver(shippingAddressValidator),
+    resolver: zodResolver(shippingAddressSchema),
     defaultValues: address || DEFAULT_ADDRESS,
   });
 
@@ -51,10 +51,7 @@ const ShippingForm = ({
     });
   };
 
-  useEffect(() => {
-    if (!address?.lat) form.setValue("lat", 0);
-    if (!address?.lng) form.setValue("lng", 0);
-  }, [address?.lat, address?.lng, form]);
+  console.log(form.formState.errors);
 
   return (
     <Form {...form}>

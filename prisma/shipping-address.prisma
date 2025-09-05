@@ -1,6 +1,8 @@
 model ShippingAddress {
-  id           String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
-  userId       String?  @db.Uuid
+  id     String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  userId String @db.Uuid
+  user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
   fullName     String
   addressLine1 String
   addressLine2 String?
@@ -11,5 +13,6 @@ model ShippingAddress {
   createdAt    DateTime @default(now()) @db.Timestamp(6)
   lat          Float?
   lng          Float?
-  user         User?    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  orders Order[]
 }
