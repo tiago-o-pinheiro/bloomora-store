@@ -1,7 +1,7 @@
 import z from "zod";
 import { currency } from "./product.validator";
 
-export const cartItemValidator = z.object({
+export const cartItemSchema = z.object({
   id: z.string().min(1, "Product id is required"),
   name: z.string().min(2, "Product name is required"),
   slug: z.string().min(2, "Product slug is required"),
@@ -14,7 +14,7 @@ export const cartItemValidator = z.object({
 });
 
 export const insertCartSchema = z.object({
-  items: z.array(cartItemValidator),
+  items: z.array(cartItemSchema),
   itemsPrice: currency,
   totalPrice: currency,
   shippingPrice: currency,

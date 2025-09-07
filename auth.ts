@@ -3,7 +3,7 @@ import { PrismaAdapter } from "@auth/prisma-adapter";
 import CredentialsProvider from "next-auth/providers/credentials";
 import { prisma } from "@/db/prisma";
 import { compareSync } from "bcrypt-ts-edge";
-import { CredentialsValidator } from "@/lib/validators/credentials.valitador";
+import { CredentialsSchema } from "@/lib/validators/credentials.valitador";
 import type { NextAuthConfig } from "next-auth";
 import { edgeAuthConfig } from "./auth-edge";
 import { getSessionCartId } from "./lib/actions/cart/cart.actions";
@@ -29,7 +29,7 @@ export const config: NextAuthConfig = {
         password: { type: "password", placeholder: "Password" },
       },
       async authorize(credentials) {
-        const parsed = CredentialsValidator.safeParse(credentials);
+        const parsed = CredentialsSchema.safeParse(credentials);
         if (!parsed.success) {
           return null;
         }

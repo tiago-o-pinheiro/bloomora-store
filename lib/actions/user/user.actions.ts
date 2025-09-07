@@ -1,9 +1,9 @@
 "use server";
 
-import { CredentialsValidator } from "@/lib/validators/credentials.valitador";
+import { CredentialsSchema } from "@/lib/validators/credentials.valitador";
 import { signIn, signOut } from "@/auth";
 import { isRedirectError } from "next/dist/client/components/redirect-error";
-import { SignUpValidator } from "@/lib/validators/sign-up.valitador";
+import { signUpSchema } from "@/lib/validators/sign-up.valitador";
 import { hashSync } from "bcrypt-ts-edge";
 import { prisma } from "@/db/prisma";
 import { formatError } from "@/lib/utils";
@@ -21,7 +21,7 @@ export const signInWithCredentials = async (
   formData: FormData
 ) => {
   try {
-    const user = CredentialsValidator.parse({
+    const user = CredentialsSchema.parse({
       email: formData.get("email"),
       password: formData.get("password"),
     });
@@ -56,7 +56,7 @@ export const signOutUser = async () => {
 
 export const signUpUser = async (prevState: unknown, formData: FormData) => {
   try {
-    const user = SignUpValidator.parse({
+    const user = signUpSchema.parse({
       name: formData.get("name"),
       email: formData.get("email"),
       password: formData.get("password"),

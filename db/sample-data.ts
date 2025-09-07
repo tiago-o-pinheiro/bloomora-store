@@ -1,6 +1,25 @@
 import { hashSync } from "bcrypt-ts-edge";
 
 const sampleData = {
+  // NEW: categories used by products (fixed UUIDs)
+  categories: [
+    {
+      id: "3f2b6a1e-8c1a-4c8a-9f24-1a3f6b2d9d8a",
+      name: "Uncategorized",
+      slug: "uncategorized",
+    },
+    {
+      id: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06",
+      name: "Men's Shirts",
+      slug: "mens-shirts",
+    },
+    {
+      id: "c1e2d3f4-5a6b-4c8d-9e0f-1a2b3c4d5e6f",
+      name: "Men's Sweatshirts",
+      slug: "mens-sweatshirts",
+    },
+  ],
+
   users: [
     {
       email: "tiago@gmail.com",
@@ -21,11 +40,11 @@ const sampleData = {
       role: "USER",
     },
   ],
+
   products: [
     {
       name: "Polo Sporting Stretch Shirt",
       slug: "polo-sporting-stretch-shirt",
-      category: "Men's Dress Shirts",
       description: "Classic Polo style with modern comfort",
       images: [
         "/images/sample-products/p1-1.jpg",
@@ -38,11 +57,11 @@ const sampleData = {
       stock: 5,
       isFeatured: true,
       banner: "banner-1.jpg",
+      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
     },
     {
       name: "Brooks Brothers Long Sleeved Shirt",
       slug: "brooks-brothers-long-sleeved-shirt",
-      category: "Men's Dress Shirts",
       description: "Timeless style and premium comfort",
       images: [
         "/images/sample-products/p2-1.jpg",
@@ -55,11 +74,11 @@ const sampleData = {
       stock: 10,
       isFeatured: true,
       banner: "banner-2.jpg",
+      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
     },
     {
       name: "Tommy Hilfiger Classic Fit Dress Shirt",
       slug: "tommy-hilfiger-classic-fit-dress-shirt",
-      category: "Men's Dress Shirts",
       description: "A perfect blend of sophistication and comfort",
       images: [
         "/images/sample-products/p3-1.jpg",
@@ -72,11 +91,11 @@ const sampleData = {
       stock: 0,
       isFeatured: false,
       banner: null,
+      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
     },
     {
       name: "Calvin Klein Slim Fit Stretch Shirt",
       slug: "calvin-klein-slim-fit-stretch-shirt",
-      category: "Men's Dress Shirts",
       description: "Streamlined design with flexible stretch fabric",
       images: [
         "/images/sample-products/p4-1.jpg",
@@ -89,11 +108,11 @@ const sampleData = {
       stock: 10,
       isFeatured: false,
       banner: null,
+      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
     },
     {
       name: "Polo Ralph Lauren Oxford Shirt",
       slug: "polo-ralph-lauren-oxford-shirt",
-      category: "Men's Dress Shirts",
       description: "Iconic Polo design with refined oxford fabric",
       images: [
         "/images/sample-products/p5-1.jpg",
@@ -106,11 +125,11 @@ const sampleData = {
       stock: 6,
       isFeatured: false,
       banner: null,
+      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
     },
     {
       name: "Polo Classic Pink Hoodie",
       slug: "polo-classic-pink-hoodie",
-      category: "Men's Sweatshirts",
       description: "Soft, stylish, and perfect for laid-back days",
       images: [
         "/images/sample-products/p6-1.jpg",
@@ -123,6 +142,7 @@ const sampleData = {
       stock: 8,
       isFeatured: true,
       banner: null,
+      categoryId: "c1e2d3f4-5a6b-4c8d-9e0f-1a2b3c4d5e6f", // Men's Sweatshirts
     },
   ],
 };

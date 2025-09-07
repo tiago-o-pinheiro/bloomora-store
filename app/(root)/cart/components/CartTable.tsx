@@ -1,6 +1,6 @@
 "use client";
 
-import { Cart } from "@/lib/types/cart.types";
+import { Cart } from "@/lib/types/cart.type";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useTransition } from "react";
@@ -20,7 +20,7 @@ import {
   addItemToCart,
   removeItemFromCart,
 } from "@/lib/actions/cart/cart.actions";
-import { Item } from "@/lib/types/item.types";
+import { Item } from "@/lib/types/item.type";
 import { formatCurrency } from "@/lib/utils";
 import { Card, CardContent } from "@/components/ui/card";
 
