@@ -7,6 +7,8 @@ export const formatDate = (
 ): string => {
   if (!date) return "";
 
+  const parsedDate = typeof date === "string" ? new Date(date) : date;
+
   const options: Record<DateFormatType, Intl.DateTimeFormatOptions> = {
     dateTime: {
       year: "numeric",
@@ -26,5 +28,5 @@ export const formatDate = (
     },
   };
 
-  return new Intl.DateTimeFormat(locale, options[type]).format(date);
+  return new Intl.DateTimeFormat(locale, options[type]).format(parsedDate);
 };
