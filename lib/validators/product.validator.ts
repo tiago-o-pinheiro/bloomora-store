@@ -12,10 +12,7 @@ export const currency = z
 export const insertProductSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long").max(100),
   slug: z.string().min(3, "Slug must be at least 3 characters long").max(100),
-  category: z
-    .string()
-    .min(3, "Category must be at least 3 characters long")
-    .max(100),
+  categoryId: z.uuid("Invalid category id"),
   brand: z.string().min(3, "Brand must be at least 3 characters long").max(100),
   description: z
     .string()
@@ -31,3 +28,7 @@ export const insertProductSchema = z.object({
   stock: z.coerce.number().min(0),
   banner: z.string().nullable(),
 });
+
+export const updateProductSchema = insertProductSchema
+  .partial()
+  .extend({ id: z.uuid("Invalid product id") });

@@ -7,15 +7,15 @@ import {
   GENERIC_ERROR,
   PRODUCT_NOT_FOUND,
 } from "@/lib/constants/error-codes.constants";
-import { Cart } from "@/lib/types/cart.types";
-import { Item } from "@/lib/types/item.types";
+import { Cart } from "@/lib/types/cart.type";
+import { Item } from "@/lib/types/item.type";
 import {
   convertToPlainObject,
   formatError,
   roundTwoDecimalPlaces,
 } from "@/lib/utils";
 import {
-  cartItemValidator,
+  cartItemSchema,
   insertCartSchema,
 } from "@/lib/validators/cart.validator";
 import { revalidatePath } from "next/cache";
@@ -57,7 +57,7 @@ export const addItemToCart = async (data: Item) => {
     const userId = session?.user.id ? session.user.id : null;
 
     const cart = (await getCartItems()) as Cart | null;
-    const item = cartItemValidator.parse(data);
+    const item = cartItemSchema.parse(data);
 
     const product = await prisma.product.findUnique({
       where: { id: item.id },

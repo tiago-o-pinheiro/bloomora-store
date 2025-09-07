@@ -1,5 +1,5 @@
 import { parseZodErrors } from "@/lib/utils";
-import { SignUpValidator } from "@/lib/validators/sign-up.valitador";
+import { signUpSchema } from "@/lib/validators/sign-up.valitador";
 import { useState, useTransition } from "react";
 
 export type FieldErrors = Record<string, string[] | undefined>;
@@ -15,7 +15,7 @@ export const useFormValidation = (action: (fd: FormData) => void) => {
     const fd = new FormData(e.currentTarget);
     const values = Object.fromEntries(fd.entries()) as Record<string, string>;
 
-    const parsed = SignUpValidator.safeParse(values);
+    const parsed = signUpSchema.safeParse(values);
     if (!parsed.success) {
       const { fieldErrors, formErrors } = parseZodErrors(parsed.error);
       setErrors({ ...fieldErrors, form: formErrors });

@@ -1,7 +1,7 @@
 "use client";
 
 import { useAddRemoveItem } from "@/hooks/use-add-remove-item";
-import { Item } from "@/lib/types/item.types";
+import { Item } from "@/lib/types/item.type";
 import { Button } from "../button";
 import { Loader, Minus, Plus, Trash } from "lucide-react";
 

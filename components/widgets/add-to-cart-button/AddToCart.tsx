@@ -2,8 +2,8 @@
 
 import { Button } from "@/components/ui/button";
 
-import { Cart } from "@/lib/types/cart.types";
-import { Item } from "@/lib/types/item.types";
+import { Cart } from "@/lib/types/cart.type";
+import { Item } from "@/lib/types/item.type";
 import { Loader, Plus } from "lucide-react";
 import { QuantityPicker } from "@/components/ui/quantity-picker/QuantityPicker";
 import { useAddRemoveItem } from "@/hooks/use-add-remove-item";

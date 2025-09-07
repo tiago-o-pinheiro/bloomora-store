@@ -6,7 +6,7 @@ import {
 } from "@/lib/actions/cart/cart.actions";
 import { toast } from "sonner";
 
-import { Item } from "@/lib/types/item.types";
+import { Item } from "@/lib/types/item.type";
 import { useRef, useTransition } from "react";
 
 const INITIAL_LOADING = {
