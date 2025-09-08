@@ -10,6 +10,7 @@ import {
 import { signOutUser } from "@/lib/actions/user/user.actions";
 import { UserIcon } from "lucide-react";
 import Link from "next/link";
+import ProtectedResource from "../protected-resource/ProtectedResource";
 
 const SignOutButton = () => {
   return (
@@ -62,6 +63,13 @@ const UserDetails = async () => {
               User Profile
             </Link>
           </DropdownMenuItem>
+          <ProtectedResource>
+            <DropdownMenuItem>
+              <Link href="/admin/dashboard" className="flex items-center">
+                Admin Panel
+              </Link>
+            </DropdownMenuItem>
+          </ProtectedResource>
           <DropdownMenuItem className="p-0 mb-1">
             <SignOutButton />
           </DropdownMenuItem>
