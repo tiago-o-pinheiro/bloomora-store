@@ -1,6 +1,10 @@
+"use client";
+
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Column, DataTable } from "@/components/ui/table/DataTable";
+import DeleteDialog from "@/components/widgets/delete-dialog/DeleteDialog";
+import { deleteOrder } from "@/lib/actions/order/order.actions";
 import { formatDate } from "@/lib/helpers/format-date";
 import { Order } from "@/lib/types/order.type";
 import { formatCurrency } from "@/lib/utils";
@@ -46,7 +50,7 @@ const useOrdersTableColumns = () => {
       accessor: (row) => (
         <div className="flex flex-row gap-2">
           <Button variant="outline">Edit</Button>
-          <Button variant="destructive">Delete</Button>
+          <DeleteDialog id={row.id} action={async () => deleteOrder(row.id)} />
         </div>
       ),
     },

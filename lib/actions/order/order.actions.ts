@@ -11,6 +11,7 @@ import { convertToPlainObject, formatError } from "@/lib/utils";
 import { PAGE_SIZE } from "@/lib/constants/constants";
 import { Prisma } from "@prisma/client";
 import { SalesDataType } from "@/lib/types/sales-data.type";
+import { revalidatePath } from "next/cache";
 
 export const createOrder = async () => {
   try {
@@ -277,6 +278,26 @@ export const getAllOrders = async (
         currentPage: page,
         totalPages: Math.ceil(dataCount / limit),
       },
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const deleteOrder = async (id: string) => {
+  try {
+    await prisma.order.delete({
+      where: { id },
+    });
+
+    revalidatePath("/admin/orders");
+
+    return {
+      success: true,
+      message: "Order deleted successfully",
     };
   } catch (error) {
     return {
