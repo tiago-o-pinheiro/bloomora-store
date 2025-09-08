@@ -8,6 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
+import Pagination from "@/components/widgets/pagination/Pagination";
 import { getUserOrders } from "@/lib/actions/order/order.actions";
 import { formatDate } from "@/lib/helpers/format-date";
 import { formatCurrency } from "@/lib/utils";
@@ -26,53 +27,62 @@ const OrderDetailsPage = async (props: {
 
   const orders = await getUserOrders({ page: Number(page) || 1 });
 
-  console.log(orders);
-
   return (
     <div className="space-y-2">
       <h2>Order Details</h2>
       <div className="overflow-x-auto">
         {orders.data ? (
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Order ID</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Total</TableHead>
-                <TableHead>Is Paid</TableHead>
-                <TableHead>Is Delivered</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {orders.data.map((order) => (
-                <TableRow key={order.id}>
-                  <TableCell>{order.id}</TableCell>
-                  <TableCell>{formatDate(order.createdAt)}</TableCell>
-                  <TableCell>{formatCurrency(order.totalPrice)}</TableCell>
-                  <TableCell>
-                    {order.isPaid && order.paidAt ? (
-                      formatDate(order.paidAt)
-                    ) : (
-                      <Badge variant="destructive">No</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    {order.isDelivered ? (
-                      <Badge variant="success">Yes</Badge>
-                    ) : (
-                      <Badge variant="destructive">No</Badge>
-                    )}
-                  </TableCell>
-                  <TableCell>
-                    <Link href={`/order/${order.id}`}>
-                      <Button>View</Button>
-                    </Link>
-                  </TableCell>
+          <>
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Order ID</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead className="text-center">Total</TableHead>
+                  <TableHead className="text-center">Is Paid</TableHead>
+                  <TableHead className="text-center">Is Delivered</TableHead>
+                  <TableHead className="text-center">Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {orders.data.map((order) => (
+                  <TableRow key={order.id}>
+                    <TableCell>{order.id}</TableCell>
+                    <TableCell>{formatDate(order.createdAt)}</TableCell>
+                    <TableCell className="text-center">
+                      {formatCurrency(order.totalPrice)}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {order.isPaid && order.paidAt ? (
+                        formatDate(order.paidAt)
+                      ) : (
+                        <Badge variant="destructive">No</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      {order.isDelivered ? (
+                        <Badge variant="success">Yes</Badge>
+                      ) : (
+                        <Badge variant="destructive">No</Badge>
+                      )}
+                    </TableCell>
+                    <TableCell className="text-center">
+                      <Link href={`/order/${order.id}`}>
+                        <Button variant="outline">View</Button>
+                      </Link>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+            {orders.totalPages > 1 && (
+              <Pagination
+                page={Number(page) || 1}
+                totalPages={orders.totalPages}
+                urlParamName="page"
+              />
+            )}
+          </>
         ) : (
           <div>No orders found</div>
         )}
