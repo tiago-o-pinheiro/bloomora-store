@@ -10,6 +10,8 @@ import { formatError } from "@/lib/utils";
 import { PaymentMethods } from "@/lib/types/payment-methods.types";
 import { auth } from "@/auth";
 import { paymentMethodSchema } from "@/lib/validators/payment-methods.validator";
+import { User } from "@/lib/types/user.type";
+import { updateProfileSchema } from "@/lib/validators/profile.validator";
 
 export const getSessionUser = async () => {
   const session = await auth();
@@ -143,6 +145,37 @@ export const updateUserPaymentMethod = async (data: PaymentMethods) => {
 
     return {
       success: true,
+      data: user,
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const updateUserProfile = async (data: User) => {
+  try {
+    const sessionUser = await getSessionUser();
+
+    if (!sessionUser) {
+      return {
+        success: false,
+        message: "User not authenticated",
+      };
+    }
+
+    const user = await prisma.user.update({
+      where: { id: sessionUser.id },
+      data: updateProfileSchema.parse(data),
+    });
+
+    user.password = null;
+
+    return {
+      success: true,
+      message: "User profile updated successfully",
       data: user,
     };
   } catch (error) {
