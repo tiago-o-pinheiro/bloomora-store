@@ -8,6 +8,7 @@ import { getShippingAddressByUserId } from "../shipping-address/shipping-address
 import { insertOrderSchema } from "@/lib/validators/order.validator";
 import { prisma } from "@/db/prisma";
 import { convertToPlainObject, formatError } from "@/lib/utils";
+import { PAGE_SIZE } from "@/lib/constants/constants";
 
 export const createOrder = async () => {
   try {
@@ -137,6 +138,48 @@ export const getOrderById = async (id: string) => {
     return {
       success: true,
       data: convertToPlainObject(order),
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const getUserOrders = async ({
+  limit = PAGE_SIZE,
+  page = 1,
+}: {
+  limit?: number;
+  page: number;
+}) => {
+  try {
+    const sessionUser = await getSessionUser();
+    if (!sessionUser?.id) {
+      throw new Error("User not authenticated");
+    }
+
+    const orders = await prisma.order.findMany({
+      where: { userId: sessionUser.id! },
+      take: limit,
+      skip: (page - 1) * limit,
+      orderBy: {
+        createdAt: "desc",
+      },
+      include: {
+        orderItems: true,
+      },
+    });
+
+    const ordersCount = await prisma.order.count({
+      where: { userId: sessionUser.id! },
+    });
+
+    return {
+      success: true,
+      data: convertToPlainObject(orders),
+      totalPages: Math.ceil(ordersCount / limit),
     };
   } catch (error) {
     return {

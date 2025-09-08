@@ -52,6 +52,16 @@ const UserDetails = async () => {
               </div>
             </div>
           </DropdownMenuLabel>
+          <DropdownMenuItem>
+            <Link href="/user/orders" className="flex items-center">
+              My Orders
+            </Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/user/profile" className="flex items-center">
+              User Profile
+            </Link>
+          </DropdownMenuItem>
           <DropdownMenuItem className="p-0 mb-1">
             <SignOutButton />
           </DropdownMenuItem>

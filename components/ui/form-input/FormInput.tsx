@@ -11,10 +11,11 @@ import { Input } from "@/components/ui/input";
 
 type FormInputProps<T extends FieldValues, K extends Path<T>> = {
   label: string;
-  placeholder: string;
+  placeholder?: string;
   control: Control<T>;
   name: K;
   fieldDescription?: string;
+  disabled?: boolean;
 };
 
 const FormInput = <T extends FieldValues, K extends Path<T>>({
@@ -23,6 +24,7 @@ const FormInput = <T extends FieldValues, K extends Path<T>>({
   control,
   name,
   fieldDescription,
+  disabled,
 }: FormInputProps<T, K>) => {
   return (
     <div className="flex flex-col md:flex-row gap-5">
@@ -33,7 +35,7 @@ const FormInput = <T extends FieldValues, K extends Path<T>>({
           <FormItem className="w-full">
             <FormLabel>{label}</FormLabel>
             <FormControl>
-              <Input placeholder={placeholder} {...field} />
+              <Input placeholder={placeholder} {...field} disabled={disabled} />
             </FormControl>
             {fieldDescription && (
               <FormDescription>{fieldDescription}</FormDescription>

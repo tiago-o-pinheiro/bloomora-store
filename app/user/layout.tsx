@@ -1,0 +1,38 @@
+import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import MainNav from "@/components/widgets/main-nav/MainNav";
+import Menu from "@/components/widgets/menu/Menu";
+import { APP_NAME } from "@/lib/constants/constants";
+import Image from "next/image";
+import Link from "next/link";
+
+export default function UserLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <>
+      <div className=" flex flex-col">
+        <div className="border-b container mx-auto">
+          <div className="flex items-center h-16 px-4">
+            <Link href="/user/profile">
+              <Image
+                src="/images/logo.svg"
+                height={40}
+                width={40}
+                alt={APP_NAME}
+              />
+            </Link>
+            <MainNav className="mx-4" />
+            <div className="ml-auto items-center flex space-x-4">
+              <Menu />
+            </div>
+          </div>
+        </div>
+        <AnimatedContainer className="flex-1 space-y-4 p-8 pt-6 container space-x-4">
+          {children}
+        </AnimatedContainer>
+      </div>
+    </>
+  );
+}
