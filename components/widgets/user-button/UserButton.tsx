@@ -63,7 +63,7 @@ const UserDetails = async () => {
               User Profile
             </Link>
           </DropdownMenuItem>
-          <ProtectedResource>
+          <ProtectedResource shouldRedirect={false}>
             <DropdownMenuItem>
               <Link href="/admin/dashboard" className="flex items-center">
                 Admin Panel

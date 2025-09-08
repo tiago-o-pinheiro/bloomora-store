@@ -30,7 +30,6 @@ const Menu = () => {
           </SheetTrigger>
           <SheetContent className="flex flex-col items-start">
             <SheetTitle>Menu</SheetTitle>
-            <SheetDescription></SheetDescription>
             <ThemeSwitcher />
             <Button asChild variant={"ghost"}>
               <Link href="/cart" className="flex items-center">

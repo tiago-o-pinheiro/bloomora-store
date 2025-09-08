@@ -181,7 +181,11 @@ export const getUserOrders = async ({
     return {
       success: true,
       data: convertToPlainObject(orders),
-      totalPages: Math.ceil(ordersCount / limit),
+      meta: {
+        totalPages: Math.ceil(ordersCount / limit),
+        currentPage: page,
+        totalCount: ordersCount,
+      },
     };
   } catch (error) {
     return {
@@ -224,7 +228,7 @@ export const getOrderSummary = async () => {
 
     const latestSales = await prisma.order.findMany({
       orderBy: { createdAt: "desc" },
-      include: { user: { select: { name: true } } },
+      include: { user: { select: { name: true, email: true } } },
       take: 5,
     });
 
@@ -237,6 +241,41 @@ export const getOrderSummary = async () => {
         totalSales: totalSalesNumber,
         latestSales,
         salesData,
+      },
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const getAllOrders = async (
+  limit: number = PAGE_SIZE,
+  page: number = 1
+) => {
+  try {
+    const orders = await prisma.order.findMany({
+      orderBy: {
+        createdAt: "desc",
+      },
+      take: limit,
+      skip: (page - 1) * limit,
+      include: {
+        user: { select: { email: true, name: true } },
+      },
+    });
+
+    const dataCount = await prisma.order.count();
+
+    return {
+      success: true,
+      data: convertToPlainObject(orders),
+      meta: {
+        totalCount: dataCount,
+        currentPage: page,
+        totalPages: Math.ceil(dataCount / limit),
       },
     };
   } catch (error) {

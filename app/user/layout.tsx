@@ -26,7 +26,7 @@ export default function UserLayout({
       <div className=" flex flex-col">
         <div className="border-b container mx-auto">
           <div className="flex items-center h-16 px-4">
-            <Link href="/user/profile">
+            <Link href="/">
               <Image
                 src="/images/logo.svg"
                 height={40}
