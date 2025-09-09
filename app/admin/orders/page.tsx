@@ -25,7 +25,7 @@ const AdminOrdersPage = async (props: {
   }
 
   return (
-    <AnimatedContainer>
+    <AnimatedContainer className="flex items-start flex-col justify-center mx-auto">
       <h1 className="h2-bold text-2xl font-bold">Orders</h1>
       <OrdersTable orders={orders ?? []} />
       {(meta?.totalPages ?? 0) > 1 && (
