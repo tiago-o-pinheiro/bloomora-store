@@ -1,29 +1,51 @@
+import { Input } from "@/components/ui/input";
 import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
 import MainNav from "@/components/widgets/main-nav/MainNav";
 import Menu from "@/components/widgets/menu/Menu";
+import ProtectedResource from "@/components/widgets/protected-resource/ProtectedResource";
 import { APP_NAME } from "@/lib/constants/constants";
 import Image from "next/image";
 import Link from "next/link";
 
 const LINKS = [
   {
-    title: "Orders",
-    href: "/user/orders",
+    title: "Dashboard",
+    href: "/admin/dashboard",
   },
   {
-    title: "Profile",
-    href: "/user/profile",
+    title: "Products",
+    href: "/admin/products",
+  },
+  {
+    title: "Orders",
+    href: "/admin/orders",
+  },
+  {
+    title: "Users",
+    href: "/admin/users",
   },
 ];
 
-export default function UserLayout({
+const SearchBar = () => {
+  return (
+    <div>
+      <Input
+        placeholder="Search..."
+        type="search"
+        className="md:w-[300px] w-[100px]"
+      />
+    </div>
+  );
+};
+
+export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <>
-      <div className=" flex flex-col">
+    <ProtectedResource shouldRedirect>
+      <div className="flex flex-col">
         <div className="border-b container mx-auto">
           <div className="flex items-center h-16 px-4">
             <Link href="/">
@@ -36,6 +58,7 @@ export default function UserLayout({
             </Link>
             <MainNav className="mx-4" urlList={LINKS} />
             <div className="ml-auto items-center flex space-x-4">
+              <SearchBar />
               <Menu />
             </div>
           </div>
@@ -44,6 +67,6 @@ export default function UserLayout({
           {children}
         </AnimatedContainer>
       </div>
-    </>
+    </ProtectedResource>
   );
 }

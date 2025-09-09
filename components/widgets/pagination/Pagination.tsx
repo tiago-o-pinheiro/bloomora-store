@@ -8,7 +8,7 @@ import { useCallback, useTransition } from "react";
 type PaginationProps = {
   page: number;
   totalPages: number;
-  urlParamName: string;
+  urlParamName?: string;
 };
 
 const useParamNavigation = (
@@ -32,7 +32,11 @@ const useParamNavigation = (
   return { goToPage, isPending };
 };
 
-const Pagination = ({ page, totalPages, urlParamName }: PaginationProps) => {
+const Pagination = ({
+  page,
+  totalPages,
+  urlParamName = "page",
+}: PaginationProps) => {
   const { goToPage, isPending } = useParamNavigation(
     page,
     totalPages,

@@ -12,8 +12,14 @@ export const convertToPlainObject = <T>(data: T): T => {
   return JSON.parse(JSON.stringify(data));
 };
 
-//format number with decimal places
+const NUMBER_FORMATTER = new Intl.NumberFormat("en-US");
+
 export const formatNumber = (num: number): string => {
+  return NUMBER_FORMATTER.format(num);
+};
+
+//format number with decimal places
+export const formatProductPrice = (num: number): string => {
   const [int, decimal] = num.toString().split(".");
   return decimal ? `${int}.${(decimal || "0").padEnd(2, "0")}` : `${int}.00`;
 };
