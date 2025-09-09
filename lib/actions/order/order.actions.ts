@@ -12,6 +12,7 @@ import { PAGE_SIZE } from "@/lib/constants/constants";
 import { Prisma } from "@prisma/client";
 import { SalesDataType } from "@/lib/types/sales-data.type";
 import { revalidatePath } from "next/cache";
+import { Order } from "@/lib/types/order.type";
 
 export const createOrder = async () => {
   try {
@@ -287,7 +288,7 @@ export const getAllOrders = async (
   }
 };
 
-export const deleteOrder = async (id: string) => {
+export const deleteOrder = async (id: Order["id"]) => {
   try {
     await prisma.order.delete({
       where: { id },
@@ -298,6 +299,63 @@ export const deleteOrder = async (id: string) => {
     return {
       success: true,
       message: "Order deleted successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const updateOrderPaymentStatus = async (
+  id: Order["id"],
+  value: Order["isPaid"]
+) => {
+  try {
+    await prisma.order.update({
+      where: { id },
+      data: { isPaid: value, paidAt: value ? new Date() : null },
+    });
+
+    revalidatePath("/admin/orders");
+
+    return {
+      success: true,
+      message: "Order updated to paid successfully",
+    };
+  } catch (error) {
+    return {
+      success: false,
+      message: formatError(error),
+    };
+  }
+};
+
+export const updateOrderIsDelivered = async (
+  id: Order["id"],
+  value: Order["isDelivered"]
+) => {
+  try {
+    const order = await prisma.order.findUnique({ where: { id } });
+
+    if (!order?.isPaid) {
+      return {
+        success: false,
+        message: "Order is not paid",
+      };
+    }
+
+    await prisma.order.update({
+      where: { id },
+      data: { isDelivered: value, deliveredAt: value ? new Date() : null },
+    });
+
+    revalidatePath("/admin/orders");
+
+    return {
+      success: true,
+      message: "Order updated to delivered successfully",
     };
   } catch (error) {
     return {

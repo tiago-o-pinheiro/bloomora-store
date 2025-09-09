@@ -5,7 +5,7 @@ const ALLOWED_ROLES = ["ADMIN", "EDITOR"] as const;
 
 const ProtectedResource = async ({
   children,
-  shouldRedirect = true,
+  shouldRedirect = false,
 }: {
   children: React.ReactNode;
   shouldRedirect?: boolean;

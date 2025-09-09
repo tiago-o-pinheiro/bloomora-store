@@ -8,6 +8,7 @@ import { deleteOrder } from "@/lib/actions/order/order.actions";
 import { formatDate } from "@/lib/helpers/format-date";
 import { Order } from "@/lib/types/order.type";
 import { formatCurrency } from "@/lib/utils";
+import Link from "next/link";
 
 const useOrdersTableColumns = () => {
   const columns: Column<Omit<Order, "orderItems">>[] = [
@@ -49,7 +50,10 @@ const useOrdersTableColumns = () => {
       header: "Actions",
       accessor: (row) => (
         <div className="flex flex-row gap-2">
-          <Button variant="outline">Edit</Button>
+          <Link href={`/order/${row.id}`}>
+            <Button variant="outline">Edit</Button>
+          </Link>
+
           <DeleteDialog id={row.id} action={async () => deleteOrder(row.id)} />
         </div>
       ),

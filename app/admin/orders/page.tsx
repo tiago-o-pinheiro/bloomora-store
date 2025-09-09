@@ -2,6 +2,7 @@ import { getAllOrders } from "@/lib/actions/order/order.actions";
 import { Metadata } from "next";
 import OrdersTable from "./components/OrdersTable";
 import Pagination from "@/components/widgets/pagination/Pagination";
+import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
 
 export const metadata: Metadata = {
   title: "Admin Orders",
@@ -24,13 +25,13 @@ const AdminOrdersPage = async (props: {
   }
 
   return (
-    <div>
+    <AnimatedContainer>
       <h1 className="h2-bold text-2xl font-bold">Orders</h1>
       <OrdersTable orders={orders ?? []} />
       {(meta?.totalPages ?? 0) > 1 && (
         <Pagination page={Number(page)} totalPages={meta?.totalPages ?? 0} />
       )}
-    </div>
+    </AnimatedContainer>
   );
 };
 
