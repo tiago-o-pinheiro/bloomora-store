@@ -1,46 +1,32 @@
-"use client";
-
-import { Button } from "@/components/ui/button";
+import { revalidatePath } from "next/cache";
 import { updateOrderIsDelivered } from "@/lib/actions/order/order.actions";
-import { Order } from "@/lib/types/order.type";
-import { Loader } from "lucide-react";
-import { useTransition } from "react";
-import { toast } from "sonner";
+import { ManageDeliveryButton } from "./components/ManageDeliveryButton";
 
-export const ChangeDeliveryStatus = ({
+type Props = {
+  id: string;
+  isDelivered: boolean;
+  isDisabled?: boolean;
+  revalidate?: string;
+};
+
+export const ChangeDeliveryStatusWrapper = ({
   id,
   isDelivered,
   isDisabled,
-}: Partial<Order> & { isDisabled: boolean }) => {
-  const [isPending, startTransition] = useTransition();
-
-  const handleDeliveryStatusChange = async (
-    e: React.FormEvent<HTMLFormElement>
-  ) => {
-    e.preventDefault();
-    startTransition(async () => {
-      const response = await updateOrderIsDelivered(id ?? "", !isDelivered);
-      if (response.success) {
-        toast.success(response.message);
-      } else {
-        toast.error("An error occurred while updating delivery status");
-      }
-    });
+  revalidate,
+}: Props) => {
+  const onToggle = async () => {
+    "use server";
+    const res = await updateOrderIsDelivered(id, !isDelivered);
+    if (res.success && revalidate) revalidatePath(revalidate);
+    return res;
   };
 
   return (
-    <form onSubmit={handleDeliveryStatusChange}>
-      <Button variant="outline" type="submit" disabled={isDisabled}>
-        {isPending ? (
-          <>
-            <Loader className="animate-spin" /> Updating
-          </>
-        ) : (
-          `Change to ${!isDelivered ? "Not Delivered" : "Delivered"}`
-        )}
-      </Button>
-    </form>
+    <ManageDeliveryButton
+      isDelivered={isDelivered}
+      isDisabled={isDisabled}
+      onToggle={onToggle}
+    />
   );
 };
-
-export default ChangeDeliveryStatus;

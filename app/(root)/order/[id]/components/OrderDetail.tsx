@@ -5,9 +5,10 @@ import { formatDate } from "@/lib/helpers/format-date";
 import { Order } from "@/lib/types/order.type";
 import { formatCurrency, formatId } from "@/lib/utils";
 import OrderItemsTable from "./OrderItemsTable";
-import ChangePaymentStatus from "@/components/widgets/change-payment-status/ChangePaymentStatus";
-import ChangeDeliveryStatus from "@/components/widgets/change-delivery-status/ChangeDeliveryStatus";
+
 import ProtectedResource from "@/components/widgets/protected-resource/ProtectedResource";
+import { ChangePaymentStatus } from "@/components/widgets/change-payment-status/ChangePaymentStatus";
+import { ChangeDeliveryStatusWrapper } from "@/components/widgets/change-delivery-status/ChangeDeliveryStatus";
 
 type ShippingAddressCardProps = {
   userId: Order["userId"];
@@ -32,9 +33,9 @@ const ShippingAddressCard = async ({
         <div className="flex flex-row justify-between">
           <h2 className="text-xl pb-4">Shipping Address</h2>
           <ProtectedResource>
-            <ChangeDeliveryStatus
+            <ChangeDeliveryStatusWrapper
               id={orderId}
-              isPaid={isPaid}
+              isDelivered={isDelivered}
               isDisabled={!isPaid}
             />
           </ProtectedResource>
