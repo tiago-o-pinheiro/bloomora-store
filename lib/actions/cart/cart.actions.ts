@@ -14,6 +14,7 @@ import {
   formatError,
   roundTwoDecimalPlaces,
 } from "@/lib/utils";
+import { logger } from "@/lib/logger";
 import {
   cartItemSchema,
   insertCartSchema,
@@ -122,7 +123,7 @@ export const addItemToCart = async (data: Item) => {
       }`,
     };
   } catch (error) {
-    console.log(error);
+    logger.error("Error adding item to cart", { error });
     return {
       success: false,
       message: `${GENERIC_ERROR} - ${formatError(error)}`,
@@ -154,7 +155,7 @@ export const getCartItems = async (): Promise<Cart | null> => {
       taxPrice: cart.taxPrice.toString(),
     });
   } catch (error) {
-    console.log(error);
+    logger.error("Error fetching cart items", { error });
     return null;
   }
 };

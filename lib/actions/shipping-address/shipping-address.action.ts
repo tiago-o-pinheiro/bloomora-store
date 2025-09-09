@@ -1,5 +1,6 @@
 "use server";
 import { prisma } from "@/db/prisma";
+import { logger } from "@/lib/logger";
 import { shippingAddressSchema } from "@/lib/validators/shipping-address.validator";
 
 export const getShippingAddressByUserId = async (userId: string) => {
@@ -14,10 +15,13 @@ export const getShippingAddressByUserId = async (userId: string) => {
       data: address,
     };
   } catch (error) {
-    console.error("Error getting shipping address:", error);
+    logger.error("Error getting shipping address", { error });
     return {
       success: false,
-      message: "Shipping Address not found",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Shipping Address not found",
     };
   }
 };
@@ -25,7 +29,7 @@ export const getShippingAddressByUserId = async (userId: string) => {
 export const saveShippingAddress = async (userId: string, address: unknown) => {
   const existingAddress = await getShippingAddressByUserId(userId);
   const shippingAddress = shippingAddressSchema.parse(address);
-  console.log(shippingAddress);
+  logger.debug("Validated shipping address", { shippingAddress });
 
   if (!shippingAddress) {
     return {
@@ -64,10 +68,13 @@ export const saveShippingAddress = async (userId: string, address: unknown) => {
       };
     }
   } catch (error) {
-    console.error("Error saving shipping address:", error);
+    logger.error("Error saving shipping address", { error });
     return {
       success: false,
-      message: "Error saving shipping address",
+      message:
+        error instanceof Error
+          ? error.message
+          : "Error saving shipping address",
     };
   }
 };
