@@ -40,7 +40,7 @@ export default function UserLayout({
             </div>
           </div>
         </div>
-        <AnimatedContainer className="flex-1 space-y-4 p-8 pt-6 container space-x-4">
+        <AnimatedContainer className="space-y-4 p-8 pt-6 space-x-4 justify-center container mx-auto">
           {children}
         </AnimatedContainer>
       </div>

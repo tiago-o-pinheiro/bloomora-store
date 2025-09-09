@@ -15,7 +15,7 @@ const OrderDetail = async (props: { params: Promise<{ id: string }> }) => {
   if (!order) notFound();
 
   return (
-    <AnimatedContainer className="container mx-auto">
+    <AnimatedContainer className="container mx-auto justify-center">
       <OrderDetailsPage order={order} />
     </AnimatedContainer>
   );
