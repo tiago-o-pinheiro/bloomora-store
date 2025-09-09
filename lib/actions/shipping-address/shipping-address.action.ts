@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@/db/prisma";
 import { shippingAddressSchema } from "@/lib/validators/shipping-address.validator";
+import { z } from "zod";
 
 export const getShippingAddressByUserId = async (userId: string) => {
   try {
@@ -23,18 +24,11 @@ export const getShippingAddressByUserId = async (userId: string) => {
 };
 
 export const saveShippingAddress = async (userId: string, address: unknown) => {
-  const existingAddress = await getShippingAddressByUserId(userId);
-  const shippingAddress = shippingAddressSchema.parse(address);
-  console.log(shippingAddress);
-
-  if (!shippingAddress) {
-    return {
-      success: false,
-      message: "Invalid shipping address",
-    };
-  }
-
   try {
+    const existingAddress = await getShippingAddressByUserId(userId);
+    const shippingAddress = shippingAddressSchema.parse(address);
+    console.log(shippingAddress);
+
     if (existingAddress?.data) {
       // Update existing address
       const response = await prisma.shippingAddress.update({
@@ -64,6 +58,12 @@ export const saveShippingAddress = async (userId: string, address: unknown) => {
       };
     }
   } catch (error) {
+    if (error instanceof z.ZodError) {
+      return {
+        success: false,
+        message: "Invalid shipping address",
+      };
+    }
     console.error("Error saving shipping address:", error);
     return {
       success: false,
