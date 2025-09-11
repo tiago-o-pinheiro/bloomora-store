@@ -7,9 +7,10 @@ import {
   insertProductSchema,
   updateProductSchema,
 } from "@/lib/validators/product.validator";
-import { Product } from "@/lib/types/product.type";
+import { Product, ProductInput } from "@/lib/types/product.type";
 import { logger } from "@/lib/helpers/logger";
 import { revalidatePath } from "next/cache";
+import z from "zod";
 
 //Fetch latest products
 export const getLatestProducts = async () => {
@@ -103,7 +104,9 @@ export const updateProduct = async (id: string, data: Partial<Product>) => {
   }
 };
 
-export const createProduct = async (data: Product) => {
+export const createProduct = async (
+  data: z.input<typeof insertProductSchema>
+) => {
   try {
     const parsed = insertProductSchema.parse(data);
 

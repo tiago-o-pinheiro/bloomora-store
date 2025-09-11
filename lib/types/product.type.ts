@@ -12,6 +12,5 @@ export type Product = z.infer<typeof insertProductSchema> & {
   price: number | string;
   categories?: CategoryLight[] | null;
 };
-
 export type ProductInput = z.infer<typeof insertProductSchema>;
 export type ProductUpdateInput = z.infer<typeof updateProductSchema>;

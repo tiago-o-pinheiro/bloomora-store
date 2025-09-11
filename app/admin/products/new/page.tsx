@@ -1,6 +1,7 @@
 import { Button } from "@/components/ui/button";
 import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
 import { Metadata } from "next";
+import CreateProductForm from "./(components)/CreateProductForm";
 
 export const metadata: Metadata = {
   title: "Create Product",
@@ -14,6 +15,7 @@ const CreateProduct = () => {
         <h1 className="h2-bold text-2xl font-bold">Add a new product</h1>
         <Button type="submit">Save</Button>
       </div>
+      <CreateProductForm />
     </AnimatedContainer>
   );
 };

@@ -11,18 +11,12 @@ export const currency = z
 //Schema for inserting products
 
 export const insertProductSchema = z.object({
-  name: z.string().min(3, "Name must be at least 3 characters long").max(100),
-  slug: z.string().min(3, "Slug must be at least 3 characters long").max(100),
-  categoryIds: z.union([categoryIdsSchema, z.null()]).optional(),
-  brand: z.string().min(3, "Brand must be at least 3 characters long").max(100),
-  description: z
-    .string()
-    .min(10, "Description must be at least 10 characters long")
-    .max(1000),
-  images: z
-    .array(z.string())
-    .min(1, "At least one image is required")
-    .max(5, "A maximum of 5 images is allowed"),
+  name: z.string().min(3).max(100),
+  slug: z.string().min(3).max(100),
+  categoryIds: categoryIdsSchema.nullable().optional(),
+  brand: z.string().min(3).max(100),
+  description: z.string().min(10).max(1000),
+  images: z.array(z.string()).min(1).max(5),
   isFeatured: z.boolean(),
   price: currency,
   numReviews: z.number().min(0),
@@ -41,9 +35,9 @@ export const updateProductSchema = insertProductSchema
   });
 
 export const productViewSchema = insertProductSchema.extend({
-  id: z.string().uuid(),
-  rating: z.string(), // matches your current type
+  id: z.uuid(),
+  rating: z.string(),
   createdAt: z.date(),
-  price: z.union([z.number(), z.string()]), // you already allow both in type
+  price: z.union([z.number(), z.string()]),
   categories: z.array(categoryLightSchema).optional().nullable(),
 });
