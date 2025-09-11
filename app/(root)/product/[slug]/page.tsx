@@ -13,7 +13,7 @@ const ProductDetailsPage = async (props: {
 }) => {
   const { slug } = await props.params;
 
-  const product = await getProductBySlug(slug);
+  const { data: product } = await getProductBySlug(slug);
 
   if (!product) {
     return notFound();
@@ -31,7 +31,7 @@ const ProductDetailsPage = async (props: {
           <div className="col-span-2 p-5">
             <div className="flex flex-col gap-6">
               <p>
-                {product.brand} - {product.category.name}
+                {product.brand} - {product.categories[0]?.name}
               </p>
               <h1 className="h3-bold">{product.name}</h1>
               <p>
