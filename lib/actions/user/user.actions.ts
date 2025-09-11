@@ -12,10 +12,17 @@ import { auth } from "@/auth";
 import { paymentMethodSchema } from "@/lib/validators/payment-methods.validator";
 import { User } from "@/lib/types/user.type";
 import { updateProfileSchema } from "@/lib/validators/profile.validator";
+import { cookies } from "next/headers";
 
 export const getSessionUser = async () => {
   const session = await auth();
   return session?.user || null;
+};
+
+export const clearCustomCookies = async () => {
+  const cookieStore = await cookies();
+  cookieStore.delete("sessionCartId");
+  cookieStore.delete("sessionUser");
 };
 
 export const signInWithCredentials = async (
@@ -49,6 +56,7 @@ export const signInWithCredentials = async (
 };
 
 export const signOutUser = async () => {
+  await clearCustomCookies();
   await signOut();
   return {
     success: true,
