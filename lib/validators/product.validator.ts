@@ -1,5 +1,6 @@
 import { z } from "zod";
 import { formatProductPrice } from "../utils";
+import { categoryIdsSchema, categoryLightSchema } from "./category.validator";
 
 export const currency = z
   .string()
@@ -12,7 +13,7 @@ export const currency = z
 export const insertProductSchema = z.object({
   name: z.string().min(3, "Name must be at least 3 characters long").max(100),
   slug: z.string().min(3, "Slug must be at least 3 characters long").max(100),
-  categoryId: z.uuid("Invalid category id"),
+  categoryIds: z.union([categoryIdsSchema, z.null()]).optional(),
   brand: z.string().min(3, "Brand must be at least 3 characters long").max(100),
   description: z
     .string()
@@ -31,4 +32,18 @@ export const insertProductSchema = z.object({
 
 export const updateProductSchema = insertProductSchema
   .partial()
-  .extend({ id: z.uuid("Invalid product id") });
+  .extend({
+    id: z.uuid("Invalid product id"),
+    categoryIds: z.union([categoryIdsSchema, z.null()]).optional(),
+  })
+  .refine((data) => Object.keys(data).some((k) => k !== "id"), {
+    message: "Provide at least one field to update",
+  });
+
+export const productViewSchema = insertProductSchema.extend({
+  id: z.string().uuid(),
+  rating: z.string(), // matches your current type
+  createdAt: z.date(),
+  price: z.union([z.number(), z.string()]), // you already allow both in type
+  categories: z.array(categoryLightSchema).optional().nullable(),
+});
