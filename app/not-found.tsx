@@ -13,7 +13,7 @@ const NotFound = () => {
       <Card>
         <CardHeader className="flex items-center justify-center">
           <Image
-            src="/images/logo.svg"
+            src="/images/logo.png"
             alt={`${APP_NAME}`}
             width={48}
             height={48}

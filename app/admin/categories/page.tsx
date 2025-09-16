@@ -16,7 +16,7 @@ const Categories = async (props: { searchParams: Promise<SearchParams> }) => {
   const { data: categories } = await getAllCategories(query, Number(page));
 
   return (
-    <AnimatedContainer>
+    <AnimatedContainer className="w-full">
       <div className="flex-between">
         <h1 className="h2-bold text-2xl font-bold">Categories</h1>
         <Button asChild>

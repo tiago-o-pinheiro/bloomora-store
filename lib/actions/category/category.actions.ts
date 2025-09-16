@@ -5,7 +5,10 @@ import { PAGE_SIZE } from "@/lib/constants/constants";
 import { Category, CategoryExtended } from "@/lib/types/category.type";
 import { Meta } from "@/lib/types/meta.type";
 import { convertToPlainObject } from "@/lib/utils";
-import { updateCategorySchema } from "@/lib/validators/category.validator";
+import {
+  insertCategorySchema,
+  updateCategorySchema,
+} from "@/lib/validators/category.validator";
 import { revalidatePath } from "next/cache";
 
 export const getCategory = async (idOrSlug: string) => {
@@ -117,6 +120,30 @@ export const deleteCategory = async (id: string) => {
     return {
       success: false,
       message: "Error deleting category",
+    };
+  }
+};
+
+export const createCategory = async (data: Partial<Category>) => {
+  try {
+    const insertData = insertCategorySchema.parse(data);
+
+    const created = await prisma.category.create({
+      data: insertData,
+    });
+
+    revalidatePath("/admin/categories");
+
+    return {
+      success: true,
+      data: convertToPlainObject(created),
+      message: "Category created successfully",
+    };
+  } catch (error) {
+    console.error(error);
+    return {
+      success: false,
+      message: "Error creating category",
     };
   }
 };

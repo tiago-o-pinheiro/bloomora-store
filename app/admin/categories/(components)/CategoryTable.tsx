@@ -21,6 +21,7 @@ const useCategoryTableColumns = () => {
     {
       header: "Description",
       accessor: (row) => <span>{row.description}</span>,
+      className: "max-w-sm overflow-hidden text-ellipsis",
     },
     {
       header: "Total Products",

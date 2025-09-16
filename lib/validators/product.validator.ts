@@ -18,10 +18,10 @@ export const insertProductSchema = z.object({
   description: z.string().min(10).max(1000),
   images: z.array(z.string()).min(1).max(5),
   isFeatured: z.boolean(),
+  banner: z.string().nullable(),
   price: currency,
   numReviews: z.number().min(0),
   stock: z.coerce.number().min(0),
-  banner: z.string().nullable(),
 });
 
 export const updateProductSchema = insertProductSchema

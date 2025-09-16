@@ -7,9 +7,9 @@ import {
   FormDescription,
   FormMessage,
 } from "../form";
-import { Input } from "@/components/ui/input";
+import { Textarea } from "../textarea";
 
-type FormInputProps<T extends FieldValues, K extends Path<T>> = {
+type FormTextareaProps<T extends FieldValues, K extends Path<T>> = {
   label: string;
   placeholder?: string;
   control: Control<T>;
@@ -19,7 +19,7 @@ type FormInputProps<T extends FieldValues, K extends Path<T>> = {
   children?: React.ReactNode;
 };
 
-const FormInput = <T extends FieldValues, K extends Path<T>>({
+const FormTextarea = <T extends FieldValues, K extends Path<T>>({
   label,
   placeholder,
   control,
@@ -27,7 +27,7 @@ const FormInput = <T extends FieldValues, K extends Path<T>>({
   fieldDescription,
   disabled,
   children,
-}: FormInputProps<T, K>) => {
+}: FormTextareaProps<T, K>) => {
   return (
     <div className="flex flex-col md:flex-row gap-5 w-full">
       <FormField
@@ -38,7 +38,8 @@ const FormInput = <T extends FieldValues, K extends Path<T>>({
             <FormLabel>{label}</FormLabel>
             <FormControl>
               <div className="flex gap-2">
-                <Input
+                <Textarea
+                  className="resize-none"
                   placeholder={placeholder}
                   {...field}
                   disabled={disabled}
@@ -56,4 +57,4 @@ const FormInput = <T extends FieldValues, K extends Path<T>>({
     </div>
   );
 };
-export default FormInput;
+export default FormTextarea;

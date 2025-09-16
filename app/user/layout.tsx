@@ -28,7 +28,7 @@ export default function UserLayout({
           <div className="flex items-center h-16 px-4">
             <Link href="/">
               <Image
-                src="/images/logo.svg"
+                src="/images/logo.png"
                 height={40}
                 width={40}
                 alt={APP_NAME}

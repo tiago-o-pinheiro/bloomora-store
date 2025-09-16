@@ -34,9 +34,9 @@ const AdminProductsPage = async (props: {
       ) : (
         <p>No products found</p>
       )}
-      {meta?.totalPages && meta.totalPages > 1 && (
+      {meta?.totalPages && meta.totalPages > 1 ? (
         <Pagination page={page} totalPages={meta.totalPages} />
-      )}
+      ) : null}
     </AnimatedContainer>
   );
 };

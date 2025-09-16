@@ -11,6 +11,7 @@ import { Product, ProductInput } from "@/lib/types/product.type";
 import { logger } from "@/lib/helpers/logger";
 import { revalidatePath } from "next/cache";
 import z from "zod";
+import { Prisma } from "@prisma/client";
 
 //Fetch latest products
 export const getLatestProducts = async () => {
@@ -68,7 +69,10 @@ export const getProductBySlug = async (slug: string) => {
   }
 };
 
-export const updateProduct = async (id: string, data: Partial<Product>) => {
+export const updateProduct = async (
+  id: string,
+  data: z.input<typeof updateProductSchema>
+) => {
   try {
     const parsed = updateProductSchema.parse(data);
 
@@ -110,18 +114,19 @@ export const createProduct = async (
   try {
     const parsed = insertProductSchema.parse(data);
 
+    const { categoryIds = [], price, images, ...rest } = parsed;
+
     const created = await prisma.product.create({
       data: {
-        ...parsed,
-        categories:
-          parsed.categoryIds && parsed.categoryIds.length > 0
-            ? { connect: parsed.categoryIds.map((cid) => ({ id: cid })) }
-            : undefined,
+        ...rest,
+        images: images,
+        price: new Prisma.Decimal(String(price)),
+        categories: categoryIds?.length
+          ? { connect: categoryIds.map((id) => ({ id })) }
+          : undefined,
       },
       include: {
-        categories: {
-          select: { id: true, name: true, slug: true },
-        },
+        categories: { select: { id: true, name: true, slug: true } },
       },
     });
 
@@ -135,7 +140,7 @@ export const createProduct = async (
   } catch {
     return {
       success: false,
-      message: "Error creating product",
+      message: `Error creating product: ${data.name}`,
     };
   }
 };
@@ -148,6 +153,7 @@ export const getAllProducts = async (
 ) => {
   try {
     const products = await prisma.product.findMany({
+      orderBy: { createdAt: "desc" },
       take: limit,
       skip: (page - 1) * limit,
       include: {
