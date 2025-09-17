@@ -58,6 +58,7 @@ const CreateProductForm = ({
               name="slug"
             >
               <Button
+                type="button"
                 onClick={handleGenerateSlug}
                 className="max-w-[150px] self-end"
               >

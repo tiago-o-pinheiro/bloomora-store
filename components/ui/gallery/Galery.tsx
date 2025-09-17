@@ -9,7 +9,6 @@ const ImageGallery = ({ images }: { images: Product["images"] }) => {
   const [loading, setIsLoading] = useState(true);
   const [currentImage, setCurrentImage] = useState(0);
 
-  console.log(loading);
   return (
     <div className="space-y-4">
       <Image

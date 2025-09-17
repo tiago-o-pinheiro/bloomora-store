@@ -1,15 +1,18 @@
 import Container from "@/components/widgets/container/Container";
 import { getProductById } from "@/lib/actions/product/product.actions";
 import CreateProductForm from "../new/(components)/CreateProductForm";
+import { getAllCategories } from "@/lib/actions/category/category.actions";
 
 const Products = async (props: { params: Promise<{ id: string }> }) => {
   const { id } = await props.params;
 
   const { data: product } = await getProductById(id);
+  const { data: categories } = await getAllCategories();
 
   if (!product) {
     return <div>Product not found</div>;
   }
+
   return (
     <Container>
       <div className="flex-between">
@@ -18,7 +21,7 @@ const Products = async (props: { params: Promise<{ id: string }> }) => {
       <CreateProductForm
         type="edit"
         product={product}
-        categories={product.categories}
+        categories={categories ?? product.categories}
       />
     </Container>
   );

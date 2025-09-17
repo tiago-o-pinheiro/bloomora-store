@@ -45,6 +45,7 @@ const CreateCategoryForm = ({
             name="slug"
           >
             <Button
+              type="button"
               onClick={handleGenerateSlug}
               className="max-w-[150px] self-end"
             >
