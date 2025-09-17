@@ -19,8 +19,8 @@ export const insertCategorySchema = z.object({
     .string()
     .trim()
     .max(500, "Description must be at most 500 characters long")
-    .optional(),
-  image: z.url().optional(),
+    .nullish(),
+  image: z.url().nullish(),
 });
 
 export const updateCategorySchema = insertCategorySchema

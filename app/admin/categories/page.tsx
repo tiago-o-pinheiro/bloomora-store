@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import { getAllCategories } from "@/lib/actions/category/category.actions";
 import Link from "next/link";
 import CategoryTable from "./(components)/CategoryTable";
@@ -16,7 +16,7 @@ const Categories = async (props: { searchParams: Promise<SearchParams> }) => {
   const { data: categories } = await getAllCategories(query, Number(page));
 
   return (
-    <AnimatedContainer className="w-full">
+    <Container className="w-full">
       <div className="flex-between">
         <h1 className="h2-bold text-2xl font-bold">Categories</h1>
         <Button asChild>
@@ -29,7 +29,7 @@ const Categories = async (props: { searchParams: Promise<SearchParams> }) => {
       ) : (
         <p>No categories found</p>
       )}
-    </AnimatedContainer>
+    </Container>
   );
 };
 

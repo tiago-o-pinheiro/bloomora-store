@@ -4,53 +4,29 @@ import { Button } from "@/components/ui/button";
 import { Form } from "@/components/ui/form";
 import FormImageUpload from "@/components/ui/form-image-upload/FormImageUpload";
 import FormInput from "@/components/ui/form-input/FormInput";
-import { sluguify } from "@/lib/helpers/sluguify";
-import { CategoryInput } from "@/lib/types/category.type";
-import { insertCategorySchema } from "@/lib/validators/category.validator";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { toast } from "sonner";
-import { useForm } from "react-hook-form";
-import { z } from "zod";
-import { useTransition } from "react";
-import { createCategory } from "@/lib/actions/category/category.actions";
-import { useRouter } from "next/navigation";
+import { Category } from "@/lib/types/category.type";
 import { Loader, PlusSquare } from "lucide-react";
+import FormTextarea from "@/components/ui/form-textarea/FormTextarea";
+import { useCategoryForm } from "./use-category-form";
 
-type CategoryFormValues = z.infer<typeof insertCategorySchema>;
-
-const DEFAULT_CATEGORY: CategoryInput = {
-  name: "",
-  description: "",
-  image: "",
-  slug: "",
+const BUTTON_SUBMIT_LABEL = {
+  create: "Create Category",
+  update: "Update Category",
 };
 
-const CreateCategoryForm = () => {
-  const [isPending, startTransition] = useTransition();
-  const router = useRouter();
-  const form = useForm<CategoryFormValues>({
-    resolver: zodResolver(insertCategorySchema),
-    defaultValues: DEFAULT_CATEGORY,
-  });
+const CreateCategoryForm = ({
+  type,
+  category,
+}: {
+  type: "create" | "update";
+  category?: Category;
+}) => {
+  const { form, isPending, onSubmit, handleGenerateSlug } = useCategoryForm(
+    type,
+    category || ({} as Category)
+  );
 
   const image = form.watch("image");
-
-  const handleGenerateSlug = () => {
-    form.setValue("slug", sluguify(form.getValues("name") ?? ""));
-  };
-
-  const onSubmit = (data: CategoryFormValues) => {
-    startTransition(async () => {
-      const res = await createCategory(data);
-      if (res.success === false) {
-        toast.error(res.message || "Failed to create category.");
-      } else {
-        toast.success("Category created successfully!");
-        form.reset();
-        router.push("/admin/categories");
-      }
-    });
-  };
 
   return (
     <Form {...form}>
@@ -85,21 +61,28 @@ const CreateCategoryForm = () => {
             form.setValue("image", files[0]);
           }}
         />
-        <FormInput
+        <FormTextarea
           label="Description"
           placeholder="Category Description"
           control={form.control}
           name="description"
         />
 
-        <Button type="submit">
-          {isPending ? (
-            <Loader className="w-4 h-4 animate-spin" />
-          ) : (
-            <PlusSquare className="w-4 h-4" />
-          )}
-          {isPending ? "Creating..." : "Create Category"}
-        </Button>
+        <div className="flex gap-2 justify-end">
+          <Button
+            type="submit"
+            disabled={isPending}
+            size="lg"
+            className="w-full col-span-2"
+          >
+            {isPending ? (
+              <Loader className="w-4 h-4 animate-spin" />
+            ) : (
+              <PlusSquare className="w-4 h-4" />
+            )}{" "}
+            {BUTTON_SUBMIT_LABEL[type]}
+          </Button>
+        </div>
       </form>
     </Form>
   );

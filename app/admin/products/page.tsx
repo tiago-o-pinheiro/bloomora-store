@@ -1,5 +1,5 @@
 import { Button } from "@/components/ui/button";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import { getAllProducts } from "@/lib/actions/product/product.actions";
 import Link from "next/link";
 import ProductTable from "./(components)/produtc-table/ProductTable";
@@ -22,7 +22,7 @@ const AdminProductsPage = async (props: {
   const { data: products, meta } = await getAllProducts(query, page, category);
 
   return (
-    <AnimatedContainer className="space-y-2">
+    <Container className="space-y-2">
       <div className="flex-between">
         <h1 className="h2-bold text-2xl font-bold">Products</h1>
         <Button asChild>
@@ -37,7 +37,7 @@ const AdminProductsPage = async (props: {
       {meta?.totalPages && meta.totalPages > 1 ? (
         <Pagination page={page} totalPages={meta.totalPages} />
       ) : null}
-    </AnimatedContainer>
+    </Container>
   );
 };
 

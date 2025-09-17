@@ -1,5 +1,5 @@
 import { Input } from "@/components/ui/input";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import MainNav from "@/components/widgets/main-nav/MainNav";
 import Menu from "@/components/widgets/menu/Menu";
 import ProtectedResource from "@/components/widgets/protected-resource/ProtectedResource";
@@ -67,9 +67,9 @@ export default function AdminLayout({
             </div>
           </div>
         </div>
-        <AnimatedContainer className="space-y-4 p-8 pt-6 space-x-4 justify-center container mx-auto w-full">
+        <Container className="space-y-4 p-8 pt-6 space-x-4 justify-center container mx-auto w-full">
           {children}
-        </AnimatedContainer>
+        </Container>
       </div>
     </ProtectedResource>
   );

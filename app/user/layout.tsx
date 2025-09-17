@@ -1,4 +1,4 @@
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import MainNav from "@/components/widgets/main-nav/MainNav";
 import Menu from "@/components/widgets/menu/Menu";
 import { APP_NAME } from "@/lib/constants/constants";
@@ -40,9 +40,9 @@ export default function UserLayout({
             </div>
           </div>
         </div>
-        <AnimatedContainer className="space-y-4 p-8 pt-6 space-x-4 justify-center container mx-auto">
+        <Container className="space-y-4 p-8 pt-6 space-x-4 justify-center container mx-auto">
           {children}
-        </AnimatedContainer>
+        </Container>
       </div>
     </>
   );

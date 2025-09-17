@@ -1,7 +1,9 @@
 "use server";
 
+import { utapi } from "@/app/api/uploadthing/core";
 import { prisma } from "@/db/prisma";
 import { PAGE_SIZE } from "@/lib/constants/constants";
+import { getImageKey } from "@/lib/helpers/get-image-key";
 import { Category, CategoryExtended } from "@/lib/types/category.type";
 import { Meta } from "@/lib/types/meta.type";
 import { convertToPlainObject } from "@/lib/utils";
@@ -16,11 +18,6 @@ export const getCategory = async (idOrSlug: string) => {
     const category = await prisma.category.findFirst({
       where: {
         OR: [{ id: idOrSlug }, { slug: idOrSlug }],
-      },
-      include: {
-        products: {
-          select: { id: true, name: true, slug: true },
-        },
       },
     });
 
@@ -48,11 +45,30 @@ export const updateCategory = async (id: string, data: Partial<Category>) => {
   try {
     const parsed = updateCategorySchema.parse({ ...data, id });
 
-    const { id: _, ...rest } = parsed; // remove id from update payload
+    const before = await prisma.category.findUnique({
+      where: { id: parsed.id },
+      select: { image: true },
+    });
+
+    const { id: categoryId, ...rest } = parsed;
     const updated = await prisma.category.update({
-      where: { id },
+      where: { id: categoryId },
       data: rest,
     });
+
+    const prevUrl = before?.image ?? null;
+    const nextUrl = "image" in rest ? (rest.image as string | null) : undefined;
+
+    const shouldDeletePrev =
+      nextUrl !== undefined && prevUrl && prevUrl !== nextUrl;
+
+    if (shouldDeletePrev) {
+      try {
+        await utapi.deleteFiles(getImageKey(prevUrl));
+      } catch (e) {
+        console.error("UploadThing delete failed (category image):", e);
+      }
+    }
 
     return {
       success: true,
@@ -106,19 +122,31 @@ export const getAllCategories = async (
 
 export const deleteCategory = async (id: string) => {
   try {
-    await prisma.category.delete({
+    const category = await prisma.category.findUnique({
       where: { id },
+      select: { image: true },
     });
+
+    await prisma.category.delete({ where: { id } });
+
+    if (category?.image) {
+      try {
+        await utapi.deleteFiles(getImageKey(category.image));
+      } catch (err) {
+        console.error("UploadThing delete failed (category image):", err);
+      }
+    }
 
     revalidatePath("/admin/categories");
 
     return {
-      success: true,
+      success: true as const,
       message: "Category deleted successfully",
     };
-  } catch {
+  } catch (e) {
+    console.error(e);
     return {
-      success: false,
+      success: false as const,
       message: "Error deleting category",
     };
   }

@@ -5,14 +5,23 @@ import { Column, DataTable } from "@/components/ui/table/DataTable";
 import DeleteDialog from "@/components/widgets/delete-dialog/DeleteDialog";
 import { deleteProduct } from "@/lib/actions/product/product.actions";
 import { Product } from "@/lib/types/product.type";
-import { formatCurrency, formatId, formatNumber } from "@/lib/utils";
+import { formatCurrency, formatNumber } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
 
 const useProductTableColumns = () => {
   const columns: Column<Product>[] = [
     {
-      header: "ID",
-      accessor: (row) => formatId(row.id),
+      header: "Image",
+      accessor: (row) => (
+        <Image
+          src={row.images[0]}
+          alt={row.name}
+          width={50}
+          height={50}
+          className="rounded-md"
+        />
+      ),
     },
     {
       header: "Name",

@@ -2,14 +2,14 @@
 
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import { APP_NAME } from "@/lib/constants/constants";
 import Image from "next/image";
 import Link from "next/link";
 
 const NotFound = () => {
   return (
-    <AnimatedContainer className="container mx-auto flex flex-col items-center justify-center space-y-4 h-[calc(100vh-200px)]">
+    <Container className="container mx-auto flex flex-col items-center justify-center space-y-4 h-[calc(100vh-200px)]">
       <Card>
         <CardHeader className="flex items-center justify-center">
           <Image
@@ -31,7 +31,7 @@ const NotFound = () => {
           </Link>
         </CardContent>
       </Card>
-    </AnimatedContainer>
+    </Container>
   );
 };
 

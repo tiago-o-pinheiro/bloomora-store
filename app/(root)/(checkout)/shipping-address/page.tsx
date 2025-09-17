@@ -5,7 +5,7 @@ import ShippingForm from "./components/ShippingForm";
 import type { ShippingAddress } from "@/lib/types/shipping-address.type";
 import { getShippingAddressByUserId } from "@/lib/actions/shipping-address/shipping-address.action";
 import CheckoutHeading from "@/components/widgets/checkout-heading/CheckoutHeading";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 
 export const metadata = {
   title: "Shopping Cart",
@@ -22,7 +22,7 @@ const ShippingAddress = async () => {
   const address = await getShippingAddressByUserId(session.user.id);
 
   return (
-    <AnimatedContainer className="max-w-2xl mx-auto px-4">
+    <Container className="max-w-2xl mx-auto px-4">
       <CheckoutHeading
         title="Shipping Address"
         description="Please enter your shipping address details below."
@@ -31,7 +31,7 @@ const ShippingAddress = async () => {
         address={address.data as ShippingAddress}
         userId={session.user.id}
       />
-    </AnimatedContainer>
+    </Container>
   );
 };
 

@@ -7,7 +7,7 @@ import {
   FormDescription,
   FormMessage,
 } from "../form";
-import { Card, CardContent } from "../card";
+
 import { toast } from "sonner";
 import Image from "next/image";
 import { UploadButton } from "@/components/widgets/upload-button/UploadButton";
@@ -37,25 +37,21 @@ const FormImageUpload = <T extends FieldValues, K extends Path<T>>({
         render={() => (
           <FormItem className="w-full">
             <FormLabel>{label}</FormLabel>
-            <Card>
-              <CardContent className="space-y-2 mt-2 min-h-48">
-                <div className="flex-start space-x-2">
-                  {(images ?? []).map(
-                    (img, index) =>
-                      img && (
-                        <Image
-                          key={index}
-                          src={img}
-                          alt={`Uploaded ${index + 1}`}
-                          className="w-24 h-24 object-cover object-center rounded-sm"
-                          width={96}
-                          height={96}
-                        />
-                      )
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+            <div className="flex-start space-x-2 mt-2">
+              {(images ?? []).map(
+                (img, index) =>
+                  img && (
+                    <Image
+                      key={index}
+                      src={img}
+                      alt={`Uploaded ${index + 1}`}
+                      className="w-24 h-24 object-cover object-center rounded-sm"
+                      width={96}
+                      height={96}
+                    />
+                  )
+              )}
+            </div>
             <FormControl>
               <UploadButton
                 className="mt-4 ut-button:bg-slate-950"

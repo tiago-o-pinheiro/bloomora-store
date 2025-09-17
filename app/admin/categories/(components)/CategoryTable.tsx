@@ -5,14 +5,23 @@ import { Column, DataTable } from "@/components/ui/table/DataTable";
 import DeleteDialog from "@/components/widgets/delete-dialog/DeleteDialog";
 import { deleteCategory } from "@/lib/actions/category/category.actions";
 import { CategoryExtended } from "@/lib/types/category.type";
-import { formatId, formatNumber } from "@/lib/utils";
+import { formatNumber } from "@/lib/utils";
+import Image from "next/image";
 import Link from "next/link";
 
 const useCategoryTableColumns = () => {
   const columns: Column<CategoryExtended>[] = [
     {
-      header: "ID",
-      accessor: (row) => formatId(row.id),
+      header: "Image",
+      accessor: (row) => (
+        <Image
+          src={row.image ?? "/placeholder-image.png"}
+          alt={row.name}
+          width={50}
+          height={50}
+          className="rounded-md"
+        />
+      ),
     },
     {
       header: "Name",
@@ -33,7 +42,7 @@ const useCategoryTableColumns = () => {
       accessor: (row) => (
         <div className="w-[100px] flex fle-row gap-2">
           <Button variant="outline">
-            <Link href={`/admin/category/${row.id}`}>Edit</Link>
+            <Link href={`/admin/categories/${row.id}`}>Edit</Link>
           </Button>
           <DeleteDialog
             id={row.id}

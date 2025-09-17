@@ -7,11 +7,12 @@ import {
   insertProductSchema,
   updateProductSchema,
 } from "@/lib/validators/product.validator";
-import { Product, ProductInput } from "@/lib/types/product.type";
 import { logger } from "@/lib/helpers/logger";
 import { revalidatePath } from "next/cache";
 import z from "zod";
 import { Prisma } from "@prisma/client";
+import { getImageKey } from "@/lib/helpers/get-image-key";
+import { utapi } from "@/app/api/uploadthing/core";
 
 //Fetch latest products
 export const getLatestProducts = async () => {
@@ -69,24 +70,11 @@ export const getProductBySlug = async (slug: string) => {
   }
 };
 
-export const updateProduct = async (
-  id: string,
-  data: z.input<typeof updateProductSchema>
-) => {
+export const getProductById = async (id: string) => {
   try {
-    const parsed = updateProductSchema.parse(data);
-
-    const updated = await prisma.product.update({
-      where: { id },
-      data: {
-        ...parsed,
-        // handle categories separately
-        categories:
-          parsed.categoryIds === undefined
-            ? undefined // If no category, do nothing
-            : parsed.categoryIds === null
-            ? { set: [] } // If null, clear all categories
-            : { set: parsed.categoryIds.map((cid) => ({ id: cid })) },
+    const product = await prisma.product.findUnique({
+      where: {
+        id,
       },
       include: {
         categories: {
@@ -97,10 +85,73 @@ export const updateProduct = async (
 
     return {
       success: true,
+      data: convertToPlainObject(product),
+      message: "Product fetched successfully",
+    };
+  } catch (error) {
+    logger.error("Error fetching product by id", { error });
+    return {
+      success: false,
+      message: "Error fetching product by id",
+    };
+  }
+};
+
+export const updateProduct = async (
+  id: string,
+  data: z.input<typeof updateProductSchema>
+) => {
+  try {
+    const parsed = updateProductSchema.parse({ ...data, id });
+
+    const { categoryIds, id: productId, images: nextImages, ...rest } = parsed;
+
+    const before =
+      nextImages !== undefined
+        ? await prisma.product.findUnique({
+            where: { id: productId },
+            select: { images: true },
+          })
+        : null;
+
+    const updated = await prisma.product.update({
+      where: { id: productId },
+      data: {
+        ...rest,
+        ...(nextImages !== undefined && { images: nextImages }),
+        categories:
+          categoryIds === undefined
+            ? undefined
+            : categoryIds === null
+            ? { set: [] }
+            : { set: categoryIds.map((cid) => ({ id: cid })) },
+      },
+      include: {
+        categories: { select: { id: true, name: true, slug: true } },
+      },
+    });
+
+    if (nextImages !== undefined && before) {
+      const prev = new Set((before.images ?? []).map(getImageKey));
+      const next = new Set(nextImages.map(getImageKey));
+      const removed = [...prev].filter((k) => !next.has(k));
+
+      if (removed.length > 0) {
+        try {
+          await utapi.deleteFiles(removed);
+        } catch (err) {
+          console.error("UploadThing delete failed (product images):", err);
+        }
+      }
+    }
+
+    return {
+      success: true,
       data: convertToPlainObject(updated),
       message: "Product updated successfully",
     };
-  } catch {
+  } catch (error) {
+    console.error("Error updating product", error);
     return {
       success: false,
       message: "Error updating product",
@@ -200,13 +251,22 @@ export const deleteProduct = async (id: string) => {
       where: { id },
     });
 
+    if (product.images?.length) {
+      try {
+        const keys = product.images.map(getImageKey);
+        await utapi.deleteFiles(keys);
+      } catch (err) {
+        console.error("UploadThing delete failed (product images):", err);
+      }
+    }
+
     revalidatePath(`/admin/products`);
     return {
       success: true,
       message: "Product deleted successfully",
     };
   } catch (error) {
-    logger.error("Error deleting product", { error });
+    console.error("Error deleting product", error);
     return {
       success: false,
       message: "Error deleting product",

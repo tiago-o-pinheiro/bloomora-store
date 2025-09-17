@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader } from "@/components/ui/card";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import { APP_NAME } from "@/lib/constants/constants";
 import { Metadata } from "next";
 import Image from "next/image";
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
 
 const UnauthorizedPage = () => {
   return (
-    <AnimatedContainer className="container mx-auto flex flex-col items-center justify-center space-y-4 h-[calc(100vh-200px)]">
+    <Container className="container mx-auto flex flex-col items-center justify-center space-y-4 h-[calc(100vh-200px)]">
       <Card>
         <CardHeader className="flex items-center justify-center">
           <Image
@@ -37,7 +37,7 @@ const UnauthorizedPage = () => {
           </Link>
         </CardContent>
       </Card>
-    </AnimatedContainer>
+    </Container>
   );
 };
 

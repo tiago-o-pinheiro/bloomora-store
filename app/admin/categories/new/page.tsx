@@ -1,14 +1,14 @@
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import CreateCategoryForm from "./(components)/CreateCategoryForm";
 
 const CreateCategory = () => {
   return (
-    <AnimatedContainer>
+    <Container>
       <div className="flex-between">
         <h1 className="h2-bold text-2xl font-bold">Add a new category</h1>
       </div>
       <CreateCategoryForm />
-    </AnimatedContainer>
+    </Container>
   );
 };
 

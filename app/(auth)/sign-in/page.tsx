@@ -12,7 +12,7 @@ import Link from "next/link";
 import SignInForm from "./component/SignInForm";
 import { auth } from "@/auth";
 import { redirect } from "next/navigation";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 
 export const metadata: Metadata = {
   title: "Sign In",
@@ -30,7 +30,7 @@ const SignInPage = async (props: {
   }
 
   return (
-    <AnimatedContainer className="w-full max-w-md mx-auto" animation="scale">
+    <Container className="w-full max-w-md mx-auto" animation="scale">
       <Card className="border-0 md:border">
         <CardHeader className="space-y-4">
           <Link href="/" className="flex-center">
@@ -51,7 +51,7 @@ const SignInPage = async (props: {
           <SignInForm />
         </CardContent>
       </Card>
-    </AnimatedContainer>
+    </Container>
   );
 };
 
