@@ -7,6 +7,7 @@ import {
   GENERIC_ERROR,
   PRODUCT_NOT_FOUND,
 } from "@/lib/constants/error-codes.constants";
+import { logger } from "@/lib/helpers/logger";
 import { Cart } from "@/lib/types/cart.type";
 import { Item } from "@/lib/types/item.type";
 import {
@@ -14,7 +15,7 @@ import {
   formatError,
   roundTwoDecimalPlaces,
 } from "@/lib/utils";
-import { logger } from "@/lib/logger";
+
 import {
   cartItemSchema,
   insertCartSchema,
@@ -54,8 +55,15 @@ export const addItemToCart = async (data: Item) => {
   try {
     const sessionCartId = await getSessionCartId();
     if (!sessionCartId) throw new Error("Cart session ID not found");
+
     const session = await auth();
-    const userId = session?.user.id ? session.user.id : null;
+    const sessionUserId = session?.user?.id ?? null;
+
+    // CHANGED: verify user exists in DB to avoid FK violation
+    const dbUser = sessionUserId
+      ? await prisma.user.findUnique({ where: { id: sessionUserId } })
+      : null;
+    const userId = dbUser?.id ?? null;
 
     const cart = (await getCartItems()) as Cart | null;
     const item = cartItemSchema.parse(data);
@@ -72,15 +80,25 @@ export const addItemToCart = async (data: Item) => {
     }
 
     if (!cart) {
+      if (product.stock < item.quantity) {
+        return {
+          success: false,
+          message: `${CART_OUT_OF_STOCK} - Not enough stock available`,
+        };
+      }
+
       const newCart = insertCartSchema.parse({
-        userId: userId,
+        userId,
         items: [item],
-        sessionCartId: sessionCartId,
+        sessionCartId,
         ...calcPrice([item]),
       });
 
       await prisma.cart.create({
-        data: newCart,
+        data: {
+          ...newCart,
+          userId: userId ?? undefined,
+        },
       });
 
       revalidatePath(`/product/${product.slug}`);
@@ -100,15 +118,21 @@ export const addItemToCart = async (data: Item) => {
           message: `${CART_OUT_OF_STOCK} - Not enough stock available`,
         };
       }
-      cartItems.find((i) => i.id === item.id)!.quantity = findItem.quantity + 1;
+      // CHANGED: add requested quantity, not +1
+      cartItems.find((i) => i.id === item.id)!.quantity =
+        findItem.quantity + item.quantity;
     } else {
-      if (product.stock < 1)
-        throw new Error(`${CART_OUT_OF_STOCK} - Not enough stock available`);
+      if (product.stock < item.quantity) {
+        return {
+          success: false,
+          message: `${CART_OUT_OF_STOCK} - Not enough stock available`,
+        };
+      }
       cartItems.push(item);
     }
 
     await prisma.cart.update({
-      where: { id: cart?.id },
+      where: { id: cart.id },
       data: {
         items: cartItems,
         ...calcPrice(cartItems),
@@ -137,9 +161,14 @@ export const getCartItems = async (): Promise<Cart | null> => {
     if (!sessionCartId) throw new Error("Cart session ID not found");
 
     const session = await auth();
-    const userId = session?.user?.id ?? null;
+    const sessionUserId = session?.user?.id ?? null;
 
-    const where = userId ? { userId } : { sessionCartId };
+    // CHANGED: only use userId if it exists in DB; else fall back to sessionCartId
+    const dbUser = sessionUserId
+      ? await prisma.user.findUnique({ where: { id: sessionUserId } })
+      : null;
+
+    const where = dbUser?.id ? { userId: dbUser.id } : { sessionCartId };
     const cart = await prisma.cart.findFirst({ where });
 
     if (!cart) {
@@ -189,7 +218,7 @@ export const removeItemFromCart = async (productId: string) => {
     }
 
     await prisma.cart.update({
-      where: { id: cart?.id },
+      where: { id: cart.id },
       data: {
         items: cart.items,
         ...calcPrice(cart.items),

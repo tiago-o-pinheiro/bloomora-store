@@ -1,6 +1,6 @@
 import { getCartItems } from "@/lib/actions/cart/cart.actions";
 import CartTable from "./components/CartTable";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 
 export const metadata = {
   title: "Shopping Cart",
@@ -9,9 +9,9 @@ export const metadata = {
 const Cart = async () => {
   const cart = await getCartItems();
   return (
-    <AnimatedContainer>
+    <Container>
       <CartTable cart={cart} />
-    </AnimatedContainer>
+    </Container>
   );
 };
 

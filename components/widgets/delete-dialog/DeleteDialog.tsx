@@ -19,9 +19,23 @@ import { Loader, Trash } from "lucide-react";
 type DeleteDialogProps = {
   id: string;
   action: (id: string) => Promise<{ success: boolean; message?: string }>;
+  texts?: {
+    heading: string;
+    description: string;
+  };
 };
 
-const DeleteDialog = ({ id, action }: DeleteDialogProps) => {
+const DEFAULT_TEXTS = {
+  heading: "Are you sure you want to delete this item?",
+  description:
+    "This action cannot be undone. This will permanently delete the selected item and remove its data.",
+};
+
+const DeleteDialog = ({
+  id,
+  action,
+  texts = DEFAULT_TEXTS,
+}: DeleteDialogProps) => {
   const [isPending, startTransition] = useTransition();
 
   const handleAction = async () => {
@@ -43,11 +57,10 @@ const DeleteDialog = ({ id, action }: DeleteDialogProps) => {
       <AlertDialogContent>
         <AlertDialogHeader>
           <AlertDialogTitle>
-            Are you sure you want to delete this order?
+            {texts?.heading || DEFAULT_TEXTS.heading}
           </AlertDialogTitle>
           <AlertDialogDescription>
-            This action cannot be undone. This will permanently delete your
-            account and remove your data from our servers.
+            {texts?.description || DEFAULT_TEXTS.description}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <AlertDialogFooter>

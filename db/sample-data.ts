@@ -1,7 +1,6 @@
 import { hashSync } from "bcrypt-ts-edge";
 
 const sampleData = {
-  // NEW: categories used by products (fixed UUIDs)
   categories: [
     {
       id: "3f2b6a1e-8c1a-4c8a-9f24-1a3f6b2d9d8a",
@@ -57,7 +56,7 @@ const sampleData = {
       stock: 5,
       isFeatured: true,
       banner: "banner-1.jpg",
-      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
+      categoryIds: ["b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06"],
     },
     {
       name: "Brooks Brothers Long Sleeved Shirt",
@@ -74,7 +73,7 @@ const sampleData = {
       stock: 10,
       isFeatured: true,
       banner: "banner-2.jpg",
-      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
+      categoryIds: ["b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06"],
     },
     {
       name: "Tommy Hilfiger Classic Fit Dress Shirt",
@@ -91,7 +90,7 @@ const sampleData = {
       stock: 0,
       isFeatured: false,
       banner: null,
-      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
+      categoryIds: ["b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06"],
     },
     {
       name: "Calvin Klein Slim Fit Stretch Shirt",
@@ -108,7 +107,7 @@ const sampleData = {
       stock: 10,
       isFeatured: false,
       banner: null,
-      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
+      categoryIds: ["b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06"],
     },
     {
       name: "Polo Ralph Lauren Oxford Shirt",
@@ -125,7 +124,7 @@ const sampleData = {
       stock: 6,
       isFeatured: false,
       banner: null,
-      categoryId: "b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06", // Men's Shirts
+      categoryIds: ["b6b2cfc8-3b7d-4f0e-b9cb-4f1c0a276f06"],
     },
     {
       name: "Polo Classic Pink Hoodie",
@@ -142,7 +141,7 @@ const sampleData = {
       stock: 8,
       isFeatured: true,
       banner: null,
-      categoryId: "c1e2d3f4-5a6b-4c8d-9e0f-1a2b3c4d5e6f", // Men's Sweatshirts
+      categoryIds: ["c1e2d3f4-5a6b-4c8d-9e0f-1a2b3c4d5e6f"],
     },
   ],
 };

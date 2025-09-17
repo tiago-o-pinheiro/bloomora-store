@@ -19,11 +19,22 @@ export const insertCategorySchema = z.object({
     .string()
     .trim()
     .max(500, "Description must be at most 500 characters long")
-    .optional()
-    .or(z.literal("").transform(() => undefined)),
-  image: z.url().optional(),
+    .nullish(),
+  image: z.url().nullish(),
 });
 
 export const updateCategorySchema = insertCategorySchema
   .partial()
   .extend({ id: z.uuid("Invalid category id") });
+
+export const categoryLightSchema = z.object({
+  id: z.uuid("Invalid category id"),
+  name: z.string().min(3).max(100),
+  slug: z.string().min(3).max(100),
+});
+
+export const categoryIdsSchema = z
+  .array(z.uuid("Invalid category id"))
+  .refine((ids) => new Set(ids).size === ids.length, {
+    message: "Duplicate categories are not allowed",
+  });

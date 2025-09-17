@@ -1,4 +1,4 @@
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import CheckoutHeading from "@/components/widgets/checkout-heading/CheckoutHeading";
 
 import { getUserById, getSessionUser } from "@/lib/actions/user/user.actions";
@@ -21,13 +21,13 @@ const PaymentMethodsPage = async () => {
   }
 
   return (
-    <AnimatedContainer className="max-w-2xl mx-auto px-4">
+    <Container className="max-w-2xl mx-auto px-4">
       <CheckoutHeading
         title="Payment Methods"
         description="Please select your preferred payment method."
       />
       <PaymentMethodForm preferredPaymentMethod={user.paymentMethod} />
-    </AnimatedContainer>
+    </Container>
   );
 };
 

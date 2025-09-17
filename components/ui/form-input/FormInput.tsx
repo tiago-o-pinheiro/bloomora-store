@@ -16,6 +16,7 @@ type FormInputProps<T extends FieldValues, K extends Path<T>> = {
   name: K;
   fieldDescription?: string;
   disabled?: boolean;
+  children?: React.ReactNode;
 };
 
 const FormInput = <T extends FieldValues, K extends Path<T>>({
@@ -25,9 +26,10 @@ const FormInput = <T extends FieldValues, K extends Path<T>>({
   name,
   fieldDescription,
   disabled,
+  children,
 }: FormInputProps<T, K>) => {
   return (
-    <div className="flex flex-col md:flex-row gap-5">
+    <div className="flex flex-col md:flex-row gap-5 w-full">
       <FormField
         control={control}
         name={name}
@@ -35,7 +37,14 @@ const FormInput = <T extends FieldValues, K extends Path<T>>({
           <FormItem className="w-full">
             <FormLabel>{label}</FormLabel>
             <FormControl>
-              <Input placeholder={placeholder} {...field} disabled={disabled} />
+              <div className="flex gap-2">
+                <Input
+                  placeholder={placeholder}
+                  {...field}
+                  disabled={disabled}
+                />
+                {children}
+              </div>
             </FormControl>
             {fieldDescription && (
               <FormDescription>{fieldDescription}</FormDescription>

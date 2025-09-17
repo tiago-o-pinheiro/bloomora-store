@@ -8,7 +8,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import CheckoutHeading from "@/components/widgets/checkout-heading/CheckoutHeading";
 import { getCartItems } from "@/lib/actions/cart/cart.actions";
 import { getShippingAddressByUserId } from "@/lib/actions/shipping-address/shipping-address.action";
@@ -47,7 +47,7 @@ const PlaceOrderPage = async () => {
   }
 
   return (
-    <AnimatedContainer className="max-w-2xl mx-auto px-4">
+    <Container className="max-w-2xl mx-auto px-4">
       <CheckoutHeading
         title="Place Order"
         description="Please confirm your order details."
@@ -142,7 +142,7 @@ const PlaceOrderPage = async () => {
           <PlaceOrderButton />
         </div>
       </div>
-    </AnimatedContainer>
+    </Container>
   );
 };
 

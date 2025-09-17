@@ -1,7 +1,7 @@
 import { getOrderById } from "@/lib/actions/order/order.actions";
 import { notFound } from "next/navigation";
 
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import OrderDetailsPage from "./components/OrderDetail";
 
 export const metadata = {
@@ -15,9 +15,9 @@ const OrderDetail = async (props: { params: Promise<{ id: string }> }) => {
   if (!order) notFound();
 
   return (
-    <AnimatedContainer className="container mx-auto justify-center">
+    <Container className="container mx-auto justify-center">
       <OrderDetailsPage order={order} />
-    </AnimatedContainer>
+    </Container>
   );
 };
 

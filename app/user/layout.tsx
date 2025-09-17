@@ -1,4 +1,4 @@
-import AnimatedContainer from "@/components/widgets/animated-container/AnimatedContainer";
+import Container from "@/components/widgets/container/Container";
 import MainNav from "@/components/widgets/main-nav/MainNav";
 import Menu from "@/components/widgets/menu/Menu";
 import { APP_NAME } from "@/lib/constants/constants";
@@ -28,7 +28,7 @@ export default function UserLayout({
           <div className="flex items-center h-16 px-4">
             <Link href="/">
               <Image
-                src="/images/logo.svg"
+                src="/images/logo.png"
                 height={40}
                 width={40}
                 alt={APP_NAME}
@@ -40,9 +40,9 @@ export default function UserLayout({
             </div>
           </div>
         </div>
-        <AnimatedContainer className="space-y-4 p-8 pt-6 space-x-4 justify-center container mx-auto">
+        <Container className="space-y-4 p-8 pt-6 space-x-4 justify-center container mx-auto">
           {children}
-        </AnimatedContainer>
+        </Container>
       </div>
     </>
   );

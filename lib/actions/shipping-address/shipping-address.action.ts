@@ -1,6 +1,7 @@
 "use server";
 import { prisma } from "@/db/prisma";
-import { logger } from "@/lib/logger";
+import { logger } from "@/lib/helpers/logger";
+
 import { shippingAddressSchema } from "@/lib/validators/shipping-address.validator";
 import { z } from "zod";
 

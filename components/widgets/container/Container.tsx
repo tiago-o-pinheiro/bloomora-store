@@ -20,7 +20,7 @@ const ANIMATIONS = {
   },
 };
 
-type AnimatedContainerProps = PropsWithChildren<{
+type ContainerProps = PropsWithChildren<{
   className?: string;
   speed?: AnimationSpeed;
   animation?: keyof typeof ANIMATIONS;
@@ -32,7 +32,7 @@ const speedMap: Record<AnimationSpeed, string> = {
   slow: "duration-1000",
 };
 
-const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
+const Container: React.FC<ContainerProps> = ({
   children,
   className,
   speed = "normal",
@@ -59,4 +59,4 @@ const AnimatedContainer: React.FC<AnimatedContainerProps> = ({
   );
 };
 
-export default AnimatedContainer;
+export default Container;
