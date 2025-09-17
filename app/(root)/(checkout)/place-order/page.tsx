@@ -14,7 +14,6 @@ import { getCartItems } from "@/lib/actions/cart/cart.actions";
 import { getShippingAddressByUserId } from "@/lib/actions/shipping-address/shipping-address.action";
 import { getSessionUser, getUserById } from "@/lib/actions/user/user.actions";
 import { formatCurrency } from "@/lib/utils";
-import { ArrowRight } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";

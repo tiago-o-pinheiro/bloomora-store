@@ -1,7 +1,6 @@
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { getOrderSummary } from "@/lib/actions/order/order.actions";
 import { formatCurrency, formatNumber } from "@/lib/utils";
-import { BadgeDollarSign, Barcode, CreditCardIcon, Users } from "lucide-react";
 import { Metadata } from "next";
 import Charts from "./components/Charts";
 import SalesTable from "./components/SalesTable";
