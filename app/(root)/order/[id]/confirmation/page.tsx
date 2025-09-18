@@ -9,7 +9,7 @@ const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!);
 
 const PaymentConfirmation = async (props: {
   params: Promise<{ id: string }>;
-  searchParams: { payment_intent: string };
+  searchParams: Promise<{ payment_intent: string }>;
 }) => {
   const { id } = await props.params;
   const { payment_intent: paymentIntentId } = await props.searchParams;
