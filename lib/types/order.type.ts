@@ -2,6 +2,7 @@ import z from "zod";
 import {
   insertOrderItemSchema,
   insertOrderSchema,
+  orderPaymentResultSchema,
 } from "../validators/order.validator";
 
 export type Order = z.infer<typeof insertOrderSchema> & {
@@ -20,3 +21,5 @@ export type Order = z.infer<typeof insertOrderSchema> & {
 };
 
 export type OrderItem = z.infer<typeof insertOrderItemSchema>;
+
+export type OrderPaymentResult = z.infer<typeof orderPaymentResultSchema>;

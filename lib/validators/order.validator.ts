@@ -24,3 +24,10 @@ export const insertOrderItemSchema = z.object({
   total: currency.optional(),
   slug: z.string().min(1).max(100),
 });
+
+export const orderPaymentResultSchema = z.object({
+  id: z.string(),
+  status: z.string(),
+  email_address: z.string(),
+  pricePaid: z.number(),
+});

@@ -12,7 +12,8 @@ import { PAGE_SIZE } from "@/lib/constants/constants";
 import { Prisma } from "@prisma/client";
 import { SalesDataType } from "@/lib/types/sales-data.type";
 import { revalidatePath } from "next/cache";
-import { Order } from "@/lib/types/order.type";
+import { Order, OrderPaymentResult } from "@/lib/types/order.type";
+import { ShippingAddress } from "@/lib/types/shipping-address.type";
 
 export const createOrder = async () => {
   try {
@@ -364,3 +365,74 @@ export const updateOrderIsDelivered = async (
     };
   }
 };
+
+export async function updateOrderToPaid({
+  orderId,
+  paymentResult,
+}: {
+  orderId: string;
+  paymentResult?: OrderPaymentResult;
+}) {
+  // Get order from database
+  const order = await prisma.order.findFirst({
+    where: {
+      id: orderId,
+    },
+    include: {
+      orderItems: true,
+    },
+  });
+
+  if (!order) throw new Error("Order not found");
+
+  if (order.isPaid) throw new Error("Order is already paid");
+
+  // Transaction to update order and account for product stock
+  await prisma.$transaction(async (tx) => {
+    // Iterate over products and update stock
+    for (const item of order.orderItems) {
+      await tx.product.update({
+        where: { id: item.productId },
+        data: { stock: { increment: -item.quantity } },
+      });
+    }
+
+    // Set the order to paid
+    await tx.order.update({
+      where: { id: orderId },
+      data: {
+        isPaid: true,
+        paidAt: new Date(),
+        paymentResult,
+      },
+    });
+  });
+
+  // Get updated order after transaction
+  const updatedOrder = await prisma.order.findFirst({
+    where: { id: orderId },
+    include: {
+      orderItems: true,
+      user: { select: { name: true, email: true } },
+      shippingAddress: true,
+    },
+  });
+
+  if (!updatedOrder) throw new Error("Order not found");
+
+  console.log({
+    order: {
+      ...updatedOrder,
+      shippingAddress: updatedOrder.shippingAddress,
+      paymentResult: updatedOrder.paymentResult,
+    },
+  });
+
+  // sendPurchaseReceipt({
+  //   order: {
+  //     ...updatedOrder,
+  //     shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
+  //     paymentResult: updatedOrder.paymentResult as PaymentResult,
+  //   },
+  // });
+}
