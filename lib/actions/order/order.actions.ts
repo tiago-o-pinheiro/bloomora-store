@@ -13,7 +13,6 @@ import { Prisma } from "@prisma/client";
 import { SalesDataType } from "@/lib/types/sales-data.type";
 import { revalidatePath } from "next/cache";
 import { Order, OrderPaymentResult } from "@/lib/types/order.type";
-import { ShippingAddress } from "@/lib/types/shipping-address.type";
 
 export const createOrder = async () => {
   try {
