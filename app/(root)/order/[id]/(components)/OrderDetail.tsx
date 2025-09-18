@@ -9,6 +9,7 @@ import OrderItemsTable from "./OrderItemsTable";
 import ProtectedResource from "@/components/widgets/protected-resource/ProtectedResource";
 import { ChangePaymentStatus } from "@/components/widgets/change-payment-status/ChangePaymentStatus";
 import { ChangeDeliveryStatusWrapper } from "@/components/widgets/change-delivery-status/ChangeDeliveryStatus";
+import Checkout from "./Checkout";
 
 type ShippingAddressCardProps = {
   userId: Order["userId"];
@@ -113,6 +114,9 @@ const OrderDetail = ({ order }: { order: Order }) => {
             <div className="flex justify-between">
               <div>Total</div>
               <div>{formatCurrency(order.totalPrice)}</div>
+            </div>
+            <div>
+              <Checkout order={order} />
             </div>
           </CardContent>
         </Card>

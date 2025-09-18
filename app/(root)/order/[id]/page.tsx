@@ -2,7 +2,7 @@ import { getOrderById } from "@/lib/actions/order/order.actions";
 import { notFound } from "next/navigation";
 
 import Container from "@/components/widgets/container/Container";
-import OrderDetailsPage from "./components/OrderDetail";
+import OrderDetailsPage from "./(components)/OrderDetail";
 
 export const metadata = {
   title: "Order Details",
