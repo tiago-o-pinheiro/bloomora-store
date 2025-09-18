@@ -13,6 +13,8 @@ import { Prisma } from "@prisma/client";
 import { SalesDataType } from "@/lib/types/sales-data.type";
 import { revalidatePath } from "next/cache";
 import { Order, OrderPaymentResult } from "@/lib/types/order.type";
+import { sendPurchaseReceipt } from "@/email";
+import { ShippingAddress } from "@/lib/types/shipping-address.type";
 
 export const createOrder = async () => {
   try {
@@ -419,19 +421,9 @@ export async function updateOrderToPaid({
 
   if (!updatedOrder) throw new Error("Order not found");
 
-  console.log({
+  sendPurchaseReceipt({
     order: {
       ...updatedOrder,
-      shippingAddress: updatedOrder.shippingAddress,
-      paymentResult: updatedOrder.paymentResult,
     },
   });
-
-  // sendPurchaseReceipt({
-  //   order: {
-  //     ...updatedOrder,
-  //     shippingAddress: updatedOrder.shippingAddress as ShippingAddress,
-  //     paymentResult: updatedOrder.paymentResult as PaymentResult,
-  //   },
-  // });
 }
