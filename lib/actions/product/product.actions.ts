@@ -13,6 +13,7 @@ import z from "zod";
 import { Prisma } from "@prisma/client";
 import { getImageKey } from "@/lib/helpers/get-image-key";
 import { utapi } from "@/app/api/uploadthing/core";
+import { deleteImages } from "../images/images.actions";
 
 //Fetch latest products
 export const getLatestProducts = async () => {
@@ -252,12 +253,7 @@ export const deleteProduct = async (id: string) => {
     });
 
     if (product.images?.length) {
-      try {
-        const keys = product.images.map(getImageKey);
-        await utapi.deleteFiles(keys);
-      } catch (err) {
-        console.error("UploadThing delete failed (product images):", err);
-      }
+      await deleteImages(product.images);
     }
 
     revalidatePath(`/admin/products`);
