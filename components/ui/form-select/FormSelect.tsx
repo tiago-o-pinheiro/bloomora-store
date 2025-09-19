@@ -21,6 +21,7 @@ type FormSelectProps<T extends FieldValues, K extends Path<T>> = {
   label: string;
   name: K;
   options: Array<{ value: string; label: string }>;
+  defaultValue?: string;
 };
 
 const FormSelect = <T extends FieldValues, K extends Path<T>>({
@@ -29,6 +30,7 @@ const FormSelect = <T extends FieldValues, K extends Path<T>>({
   label,
   name,
   options,
+  defaultValue,
 }: FormSelectProps<T, K>) => {
   return (
     <div className="flex flex-col md:flex-row gap-5">
@@ -44,7 +46,7 @@ const FormSelect = <T extends FieldValues, K extends Path<T>>({
                   <SelectValue placeholder="Select a verified email to display" />
                 </SelectTrigger>
               </FormControl>
-              <SelectContent>
+              <SelectContent defaultValue={defaultValue}>
                 {(options || []).map((option) => (
                   <SelectItem key={option.value} value={option.value}>
                     {option.label}
