@@ -1,31 +1,144 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Bloomora — Full-Stack E-Commerce Store
+
+A complete, production-style e-commerce application for browsing and purchasing
+products, with a customer storefront, full Stripe checkout, and an admin back office.
+Built with Next.js (App Router), TypeScript, Prisma, and a Neon Postgres database.
+
+🔗 **Live demo:** https://art-store-kappa.vercel.app
+
+## Features
+
+- **Storefront**: Product catalogue with detail pages, categories, and a paginated
+  product listing
+- **Cart & Checkout**: Persistent cart, multi-step checkout (shipping address →
+  payment method → place order) and an order confirmation flow
+- **Payments**: Stripe payment intents on the client + a server-side Stripe webhook
+  that marks orders as paid
+- **Authentication**: Credentials-based auth via NextAuth (Auth.js v5) with a Prisma
+  adapter, JWT sessions, edge-compatible password hashing, and route protection in
+  middleware
+- **Admin dashboard**: Sales overview plus CRUD for products, categories, orders,
+  and users (role-gated)
+- **User area**: Profile management and order history
+- **Image uploads**: Product/category images handled through UploadThing
+- **Transactional email**: Order receipts rendered with React Email and sent via Resend
+- **Type-safe & validated**: End-to-end TypeScript with Zod schemas validating form
+  and server-action input
+- **Server Actions**: Data mutations implemented as Next.js server actions in `lib/actions/`
+
+## Tech Stack
+
+- **Framework**: Next.js 15 (App Router, React 19, server actions)
+- **Language**: TypeScript
+- **Database**: PostgreSQL on [Neon](https://neon.tech/) (serverless driver)
+- **ORM**: Prisma 6 (multi-file schema, Neon driver adapter)
+- **Auth**: NextAuth / Auth.js v5 (Credentials provider, Prisma adapter)
+- **Payments**: Stripe
+- **File uploads**: UploadThing
+- **Email**: Resend + React Email
+- **Styling**: Tailwind CSS + shadcn/ui (Radix primitives)
+- **Forms & validation**: React Hook Form + Zod
+- **Package manager**: pnpm
+
+## Project Structure
+
+```
+app/
+├── (auth)/                 # Sign-in / sign-up
+├── (root)/                 # Storefront
+│   ├── product/[slug]/     # Product detail
+│   ├── cart/               # Cart
+│   ├── (checkout)/         # shipping-address → payment-methods → place-order
+│   └── order/[id]/         # Order detail + confirmation
+├── admin/                  # Admin: dashboard, products, categories, orders, users
+├── user/                   # Customer: profile, orders
+└── api/
+    ├── auth/[...nextauth]/ # NextAuth handler
+    ├── stripe/create-intent/
+    ├── webhooks/stripe/    # Stripe webhook
+    └── uploadthing/        # Image uploads
+lib/
+├── actions/                # Server actions (cart, order, product, category, user, ...)
+├── validators/             # Zod schemas
+├── constants/              # App defaults
+└── helpers/ · types/ · utils.ts
+prisma/                     # Multi-file schema (User, Product, Category, Cart,
+                            # Order, OrderItem, ShippingAddress, Account, Session, ...)
+email/                      # React Email templates
+```
 
 ## Getting Started
 
-Install dependencies and start the development server:
+### Prerequisites
+
+- Node.js 18+
+- [pnpm](https://pnpm.io/)
+- A PostgreSQL database (a free [Neon](https://neon.tech/) project works well)
+- Stripe, Resend, and UploadThing accounts for the respective features
+
+### Installation
 
 ```bash
+# Install dependencies (runs `prisma generate` via postinstall)
 pnpm install
+
+# Apply the Prisma schema to your database
+pnpm prisma migrate dev    # or: pnpm prisma db push
+
+# Start the dev server (runs on http://localhost:4000)
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Environment variables
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+Create a `.env` file in the project root. The values below are the variables the
+app reads — fill them with your own credentials:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+# Database (Neon Postgres)
+DATABASE_URL="postgresql://user:password@host/db?sslmode=require"
+DATABASE_URL_PROD="postgresql://..."          # optional: production connection
 
-## Learn More
+# App
+NEXT_PUBLIC_APP_NAME="Bloomora"
+NEXT_PUBLIC_APP_DESCRIPTION="A place to find and purchase art."
+NEXT_PUBLIC_SERVER_URL="http://localhost:4000"
+NEXT_PUBLIC_LATEST_PRODUCTS_LIMIT=10
+NEXT_PUBLIC_PAGE_SIZE=10
 
-To learn more about Next.js, take a look at the following resources:
+# Auth
+MAX_TOKEN_LIFE=2592000                          # session/JWT lifetime (seconds)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+# Payments (Stripe)
+NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY="pk_test_..."
+STRIPE_SECRET_KEY="sk_test_..."
+STRIPE_WEBHOOK_SECRET="whsec_..."
+PAYMENT_METHODS="PayPal,Stripe,Credit Card"
+DEFAULT_PAYMENT_METHOD="Credit Card"
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+# Email (Resend)
+RESEND_API_KEY="re_..."
+SENDER_EMAIL="onboarding@resend.dev"
+```
 
-## Deploy on Vercel
+### Useful scripts
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+```bash
+pnpm dev      # Start the dev server on port 4000
+pnpm build    # Production build
+pnpm start    # Run the production build
+pnpm lint     # Lint
+pnpm email    # Preview React Email templates locally (port 3001)
+```
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+## Screenshots
+
+> _Add screenshots here._
+
+| Storefront | Product detail | Admin dashboard |
+| --- | --- | --- |
+| _(screenshot)_ | _(screenshot)_ | _(screenshot)_ |
+
+## License
+
+This project is for portfolio and educational purposes.
